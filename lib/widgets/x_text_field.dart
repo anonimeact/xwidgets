@@ -5,8 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-import 'package:xwidgets/utils/x_textfield_options.dart';
-import 'package:xwidgets/utils/x_textfield_style.dart';
+import 'package:xwidgets_pack/utils/x_textfield_options.dart';
+import 'package:xwidgets_pack/utils/x_textfield_style.dart';
 
 /// Defines supported field types for [XTextField].
 enum XTextFieldType { normal, file, dropdown, datepicker, timepicker }

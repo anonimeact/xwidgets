@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:xwidgets/models/x_button_style.dart';
+import 'package:xwidgets_pack/models/x_button_style.dart';
 
 /// A customizable button widget that supports icons, loading state,
 /// custom text widget, rounded style, and various appearance configurations.

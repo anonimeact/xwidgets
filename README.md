@@ -1,4 +1,4 @@
-# XWidgets
+# XWidgets Pack
 
 XWidgets is a Flutter package that provides a curated set of reusable,
 customizable UI widgets to accelerate app development and improve
