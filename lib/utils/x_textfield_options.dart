@@ -30,7 +30,6 @@ class XTextFieldFileOptions {
   });
 }
 
-
 /// A configuration class for dropdown-based input on [XTextField].
 class XTextFieldDropdownOptions {
   /// The list of selectable items.
@@ -49,7 +48,7 @@ class XTextFieldDropdownOptions {
     this.items,
     this.itemAsString,
     this.selectedItem,
-    this.showSearchBox = false
+    this.showSearchBox = false,
   });
 }
 

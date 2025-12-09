@@ -67,7 +67,12 @@ class XButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final buttonStyle = style ?? XButtonStyle();
-    final textStyle = buttonStyle.textStyle ?? TextStyle(fontSize: buttonStyle.textSize, color: buttonStyle.foreground);
+    final textStyle =
+        buttonStyle.textStyle ??
+        TextStyle(
+          fontSize: buttonStyle.textSize,
+          color: buttonStyle.foreground,
+        );
 
     return SizedBox(
       height: height ?? 48,
@@ -78,7 +83,10 @@ class XButton extends StatelessWidget {
               child: SizedBox(
                 width: 25,
                 height: 25,
-                child: CircularProgressIndicator(color: buttonStyle.loadingColor, strokeWidth: 2),
+                child: CircularProgressIndicator(
+                  color: buttonStyle.loadingColor,
+                  strokeWidth: 2,
+                ),
               ),
             )
           : ElevatedButton(
@@ -91,7 +99,9 @@ class XButton extends StatelessWidget {
               },
               style: styleButtonRounded(
                 radius: radius,
-                background: isEnable ? buttonStyle.background : buttonStyle.disableBackground,
+                background: isEnable
+                    ? buttonStyle.background
+                    : buttonStyle.disableBackground,
                 foreground: buttonStyle.foreground,
                 borderColor: buttonStyle.borderColor,
                 isEnable: buttonStyle.isEnable,
@@ -107,7 +117,10 @@ class XButton extends StatelessWidget {
                   buttonStyle.prefixIcon != null
                       ? Align(
                           alignment: Alignment.centerLeft,
-                          child: Padding(padding: const EdgeInsets.only(right: 8), child: buttonStyle.prefixIcon!),
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: buttonStyle.prefixIcon!,
+                          ),
                         )
                       : const SizedBox.shrink(),
 
@@ -117,7 +130,10 @@ class XButton extends StatelessWidget {
                     mainAxisSize: .min,
                     children: [
                       if (buttonStyle.centerIcon != null)
-                        Padding(padding: const EdgeInsets.only(right: 8), child: buttonStyle.centerIcon!),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: buttonStyle.centerIcon!,
+                        ),
 
                       if (label != null) Text(label!, style: textStyle),
 
@@ -129,7 +145,10 @@ class XButton extends StatelessWidget {
                   buttonStyle.suffixIcon != null
                       ? Align(
                           alignment: Alignment.centerRight,
-                          child: Padding(padding: const EdgeInsets.only(left: 8), child: buttonStyle.suffixIcon!),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: buttonStyle.suffixIcon!,
+                          ),
                         )
                       : const SizedBox.shrink(),
                 ],
@@ -165,7 +184,9 @@ ButtonStyle styleButtonRounded({
   double paddingVertical = 5,
   double borderWidth = 0,
 }) {
-  final bgColor = isEnable == false ? Colors.grey[300] : background ?? Colors.lightBlue;
+  final bgColor = isEnable == false
+      ? Colors.grey[300]
+      : background ?? Colors.lightBlue;
   final fgColor = foreground ?? Colors.white;
 
   ButtonStyle buttonStyle =
@@ -177,11 +198,16 @@ ButtonStyle styleButtonRounded({
         textStyle: TextStyle(color: fgColor),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radius),
-          side: borderColor != null ? BorderSide(color: borderColor, width: borderWidth) : BorderSide.none,
+          side: borderColor != null
+              ? BorderSide(color: borderColor, width: borderWidth)
+              : BorderSide.none,
         ),
       ).copyWith(
         padding: WidgetStateProperty.all<EdgeInsets>(
-          EdgeInsets.symmetric(horizontal: paddingHorizontal, vertical: paddingVertical),
+          EdgeInsets.symmetric(
+            horizontal: paddingHorizontal,
+            vertical: paddingVertical,
+          ),
         ),
       );
 

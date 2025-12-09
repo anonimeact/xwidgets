@@ -16,13 +16,13 @@ enum XTextFieldType { normal, file, dropdown, datepicker, timepicker }
 /// - File picker
 /// - Dropdown list
 /// - Date picker
-/// - Time picker  
+/// - Time picker
 ///
 /// Includes:
-/// - Customizable style  
-/// - Validation  
-/// - Character counter  
-/// - Common callbacks  
+/// - Customizable style
+/// - Validation
+/// - Character counter
+/// - Common callbacks
 class XTextField extends StatefulWidget {
   /// Creates a new customizable [XTextField].
   const XTextField({
@@ -177,12 +177,15 @@ class _XTextFieldState extends State<XTextField> {
     _selectedDate = widget.datePickerOptions?.initialDate;
     _selectedTime = widget.timePickerOptions?.initialTime;
 
-    if (widget.fieldType == XTextFieldType.datepicker && _selectedDate != null) {
-      _controller.text = DateFormat(widget.datePickerOptions?.dateFormat)
-          .format(_selectedDate!);
+    if (widget.fieldType == XTextFieldType.datepicker &&
+        _selectedDate != null) {
+      _controller.text = DateFormat(
+        widget.datePickerOptions?.dateFormat,
+      ).format(_selectedDate!);
     }
 
-    if (widget.fieldType == XTextFieldType.timepicker && _selectedTime != null) {
+    if (widget.fieldType == XTextFieldType.timepicker &&
+        _selectedTime != null) {
       _controller.text = _selectedTime!.format(context);
     }
   }
@@ -202,9 +205,7 @@ class _XTextFieldState extends State<XTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (label != null) ...[
-          _buildLabel(label),
-        ],
+        if (label != null) ...[_buildLabel(label)],
         _buildFieldType(),
         if (widget.isShowCounter) _buildCounter(),
         if (_errorText != null) _buildErrorText(),
@@ -219,7 +220,9 @@ class _XTextFieldState extends State<XTextField> {
         children: [
           Text(
             text,
-            style: widget.textStyle ?? const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+            style:
+                widget.textStyle ??
+                const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
           ),
           if (widget.isRequired)
             const Text(' *', style: TextStyle(color: Colors.red)),
@@ -266,7 +269,12 @@ class _XTextFieldState extends State<XTextField> {
     }
   }
 
-  Widget _buildNormalField({VoidCallback? onTapAction, bool? isReadOnly, bool? isEnable, Widget? suffixIcon}) {
+  Widget _buildNormalField({
+    VoidCallback? onTapAction,
+    bool? isReadOnly,
+    bool? isEnable,
+    Widget? suffixIcon,
+  }) {
     final style = widget.style ?? XTextFieldStyle();
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
@@ -302,9 +310,7 @@ class _XTextFieldState extends State<XTextField> {
     return Stack(
       alignment: .centerRight,
       children: [
-        _buildNormalField(
-          isReadOnly: true
-        ),
+        _buildNormalField(isReadOnly: true),
         IconButton(
           onPressed: widget.isEnable ? _showFilePickerBottomSheet : null,
           icon: widget.suffixIcon ?? Icon(Icons.file_present_sharp),
@@ -318,7 +324,9 @@ class _XTextFieldState extends State<XTextField> {
 
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
       builder: (_) {
         return SafeArea(
           child: Column(
@@ -326,7 +334,13 @@ class _XTextFieldState extends State<XTextField> {
             children: [
               const SizedBox(height: 12),
 
-              Text(fileOpt.filePickerTitle, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(
+                fileOpt.filePickerTitle,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
 
               const Divider(height: 20),
 
@@ -381,7 +395,6 @@ class _XTextFieldState extends State<XTextField> {
       _validate(file.path);
     }
   }
-
 
   Widget _buildDropdownField() {
     final style = widget.style ?? const XTextFieldStyle();

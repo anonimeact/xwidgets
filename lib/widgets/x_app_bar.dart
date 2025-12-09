@@ -61,10 +61,12 @@ class XAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: actions,
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: bgColor,
-        statusBarIconBrightness:
-            isDarkBackground ? Brightness.light : Brightness.dark,
-        statusBarBrightness:
-            isDarkBackground ? Brightness.dark : Brightness.light,
+        statusBarIconBrightness: isDarkBackground
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarBrightness: isDarkBackground
+            ? Brightness.dark
+            : Brightness.light,
       ),
 
       /// Leading logic:
@@ -81,14 +83,13 @@ class XAppBar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: onTapBack ?? () => Navigator.pop(context),
             ),
 
-      title: child ??
+      title:
+          child ??
           Text(
             title ?? '',
-            style: titleTextStyle ??
-                const TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                ),
+            style:
+                titleTextStyle ??
+                const TextStyle(fontSize: 18, color: Colors.white),
           ),
     );
   }

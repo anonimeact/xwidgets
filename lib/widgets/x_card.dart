@@ -67,7 +67,7 @@ class XCard extends StatelessWidget {
     this.margin = const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
     this.blurRadius,
     this.shadowColor,
-     this.width,
+    this.width,
   });
 
   @override

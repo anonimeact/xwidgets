@@ -37,7 +37,11 @@ class XFormValidator {
   static String? Function(String?) maxLength(int maxLength, {String? message}) {
     return (String? value) {
       if (value != null && value.length > maxLength) {
-        return message ?? _defaultMessages['maxLength']!.replaceAll('{maxLength}', maxLength.toString());
+        return message ??
+            _defaultMessages['maxLength']!.replaceAll(
+              '{maxLength}',
+              maxLength.toString(),
+            );
       }
       return null;
     };
@@ -47,7 +51,11 @@ class XFormValidator {
   static String? Function(String?) minLength(int minLength, {String? message}) {
     return (String? value) {
       if (value != null && value.length < minLength) {
-        return message ?? _defaultMessages['minLength']!.replaceAll('{minLength}', minLength.toString());
+        return message ??
+            _defaultMessages['minLength']!.replaceAll(
+              '{minLength}',
+              minLength.toString(),
+            );
       }
       return null;
     };
@@ -60,7 +68,9 @@ class XFormValidator {
         return null;
       }
 
-      final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+      final emailRegex = RegExp(
+        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+      );
 
       if (!emailRegex.hasMatch(value)) {
         return message ?? _defaultMessages['email'];
@@ -264,7 +274,9 @@ class XFormValidator {
   }
 
   /// Combines multiple validators
-  static String? Function(String?) combine(List<String? Function(String?)> validators) {
+  static String? Function(String?) combine(
+    List<String? Function(String?)> validators,
+  ) {
     return (String? value) {
       for (final validator in validators) {
         final error = validator(value);
@@ -328,7 +340,9 @@ class XFormValidator {
         return null;
       }
 
-      final urlRegex = RegExp(r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$');
+      final urlRegex = RegExp(
+        r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$',
+      );
 
       if (!urlRegex.hasMatch(value)) {
         return message ?? _defaultMessages['url'];

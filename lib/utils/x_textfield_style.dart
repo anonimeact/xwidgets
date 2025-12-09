@@ -36,21 +36,22 @@ class XTextFieldStyle {
 
   /// Returns a default [OutlineInputBorder] using the provided width.
   OutlineInputBorder outline([double? width]) => OutlineInputBorder(
-        borderRadius: BorderRadius.circular(borderRadius),
-        borderSide: BorderSide(color: outlineColor, width: width ?? outlineWidth),
-      );
+    borderRadius: BorderRadius.circular(borderRadius),
+    borderSide: BorderSide(color: outlineColor, width: width ?? outlineWidth),
+  );
 
   /// Returns the focused [OutlineInputBorder].
   OutlineInputBorder focusedOutline() => OutlineInputBorder(
-        borderRadius: BorderRadius.circular(borderRadius),
-        borderSide:
-            BorderSide(color: focusedOutlineColor, width: focusedOutlineWidth),
-      );
+    borderRadius: BorderRadius.circular(borderRadius),
+    borderSide: BorderSide(
+      color: focusedOutlineColor,
+      width: focusedOutlineWidth,
+    ),
+  );
 
   /// Returns the error [OutlineInputBorder].
   OutlineInputBorder errorOutline() => OutlineInputBorder(
-        borderRadius: BorderRadius.circular(borderRadius),
-        borderSide:
-            BorderSide(color: errorOutlineColor, width: errorOutlineWidth),
-      );
+    borderRadius: BorderRadius.circular(borderRadius),
+    borderSide: BorderSide(color: errorOutlineColor, width: errorOutlineWidth),
+  );
 }

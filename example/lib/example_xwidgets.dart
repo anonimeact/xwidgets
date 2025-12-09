@@ -18,7 +18,11 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: XAppBar(title: 'XWidgets', backButton: Icon(Icons.logout), onTapBack: () => exit(0)),
+      appBar: XAppBar(
+        title: 'XWidgets',
+        backButton: Icon(Icons.logout),
+        onTapBack: () => exit(0),
+      ),
       body: XCard(
         margin: EdgeInsets.all(16),
         padding: EdgeInsets.all(16),
@@ -61,22 +65,35 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
                 child: Column(
                   mainAxisAlignment: .center,
                   children: [
-                    XText('On Press', style: TextStyle(fontSize: 11), icon: Icon(Icons.ads_click_rounded)),
+                    XText(
+                      'On Press',
+                      style: TextStyle(fontSize: 11),
+                      icon: Icon(Icons.ads_click_rounded),
+                    ),
                     Text('XButton Custom View'),
                   ],
                 ),
               ),
               XSpacer(height: 16),
+              XTextField(labelOnLine: 'Nama', hintText: 'Siapa namamu?'),
+              XSpacer(height: 8),
               XTextField(
-                labelOnLine: 'Nama',
-                hintText: 'Siapa namamu?',
+                label: 'Date Picker',
+                fieldType: .datepicker,
+                suffixIcon: Icon(Icons.calendar_month_outlined),
               ),
               XSpacer(height: 8),
-              XTextField(label: 'Date Picker', fieldType: .datepicker, suffixIcon: Icon(Icons.calendar_month_outlined),),
+              XTextField(
+                labelOnLine: 'Date Time labelOnLine',
+                fieldType: .timepicker,
+                suffixIcon: Icon(Icons.timelapse_outlined),
+              ),
               XSpacer(height: 8),
-              XTextField(labelOnLine: 'Date Time labelOnLine', fieldType: .timepicker, suffixIcon: Icon(Icons.timelapse_outlined),),
-              XSpacer(height: 8),
-              XTextField(label: 'File Picker', isRequired: true, fieldType: .file),
+              XTextField(
+                label: 'File Picker',
+                isRequired: true,
+                fieldType: .file,
+              ),
               XSpacer(height: 8),
               XTextField(
                 label: 'Date Time labelOnLine',

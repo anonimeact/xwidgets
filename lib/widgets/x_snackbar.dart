@@ -24,7 +24,8 @@ import 'package:flutter/material.dart';
 class XSnackbar {
   /// A global key that must be assigned to the app's `MaterialApp` in order
   /// for XSnackbar to access the current [ScaffoldMessengerState].
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 
   // ---------------------------------------------------------------------------
   // PUBLIC API – PRESET SNACKBAR TYPES
@@ -272,14 +273,22 @@ class XSnackbar {
         child: Material(
           elevation: 6,
           color: color,
-          shape: floating && !isTop ? (shape ?? RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))) : null,
+          shape: floating && !isTop
+              ? (shape ??
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ))
+              : null,
           borderRadius: isTop ? BorderRadius.circular(12) : null,
           child: Padding(
             padding: const EdgeInsets.all(14),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (leadingIcon != null) ...[Icon(leadingIcon, color: Colors.white), const SizedBox(width: 12)],
+                if (leadingIcon != null) ...[
+                  Icon(leadingIcon, color: Colors.white),
+                  const SizedBox(width: 12),
+                ],
                 Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -288,11 +297,17 @@ class XSnackbar {
                       if (title != null) ...[
                         Text(
                           title,
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         const SizedBox(height: 4),
                       ],
-                      Text(message, style: const TextStyle(color: Colors.white)),
+                      Text(
+                        message,
+                        style: const TextStyle(color: Colors.white),
+                      ),
                     ],
                   ),
                 ),
@@ -302,7 +317,10 @@ class XSnackbar {
                       onAction();
                       entry.remove();
                     },
-                    child: Text(actionLabel, style: const TextStyle(color: Colors.white)),
+                    child: Text(
+                      actionLabel,
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ),
               ],
             ),
