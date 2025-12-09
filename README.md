@@ -5,6 +5,8 @@ customizable UI widgets to accelerate app development and improve
 consistency across projects. The library focuses on lightweight, well-documented
 components that are easy to style and compose.
 
+![Example](xwidgets.jpeg)
+
 ## Features
 
 - **XAppBar** — A configurable app bar with title, subtitle, leading and action
