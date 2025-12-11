@@ -1,6 +1,6 @@
 name: xwidgets_pack
 description: The library focuses on lightweight, well-documented components that are easy to style and compose.
-version: 1.0.0
+version: 1.0.1
 repository: https://github.com/anonimeact/xwidgets.git
 
 environment:

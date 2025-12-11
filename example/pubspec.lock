@@ -701,7 +701,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.6.1"
-  xwidgets:
+  xwidgets_pack:
     dependency: "direct main"
     description:
       path: ".."

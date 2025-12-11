@@ -6,7 +6,7 @@
 
 import 'package:example/example_xwidgets.dart';
 import 'package:flutter/material.dart';
-import 'package:xwidgets/widgets/x_snackbar.dart';
+import 'package:xwidgets_pack/xwidgets.dart';
 
 void main() {
   runApp(

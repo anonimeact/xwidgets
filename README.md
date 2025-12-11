@@ -50,6 +50,7 @@ import 'package:xwidgets/xwidgets.dart';
 // Use a simple XButton
 XButton(
   label: 'Send',
+  isLoading: isLoading
   onPressed: () => print('sent'),
 );
 
@@ -59,9 +60,10 @@ XAppBar(
   actions: [IconButton(icon: Icon(Icons.search), onPressed: () {})],
 );
 
-// Text field with validation
+// Text field with validation & field type
 XTextField(
   controller: myController,
+  fieldType: .file
   validator: (v) => v == null || v.isEmpty ? 'Required' : null,
 );
 ```

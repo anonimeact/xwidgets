@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 ///   to avoid conflict with the manual underline.
 /// - [isUseUnderline]: If true, draws a bottom border manually to simulate
 ///   an underline without affecting text metrics.
-/// - [crossAxisAlignment]: Controls vertical alignment inside the Row.
+/// - [iconVerticalAlignment]: Controls vertical alignment inside the Row.
 /// - [onTap]: Tap callback using GestureDetector.
 /// - [maxWidth]: Constrains the text to a maximum width.
 /// - [overflow]: Controls the text overflow behavior (e.g., ellipsis).
@@ -32,8 +32,9 @@ class XText extends StatelessWidget {
     this.text, {
     super.key,
     this.icon,
+    this.isExpand = false,
     this.style,
-    this.crossAxisAlignment,
+    this.iconVerticalAlignment,
     this.isUseUnderline = false,
     this.onTap,
     this.maxWidth,
@@ -42,9 +43,10 @@ class XText extends StatelessWidget {
 
   final String text;
   final Widget? icon;
+  final bool isExpand;
   final TextStyle? style;
   final bool? isUseUnderline;
-  final CrossAxisAlignment? crossAxisAlignment;
+  final CrossAxisAlignment? iconVerticalAlignment;
   final Function()? onTap;
   final double? maxWidth;
   final TextOverflow? overflow;
@@ -54,36 +56,47 @@ class XText extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Row(
-        mainAxisSize: .min,
-        crossAxisAlignment: crossAxisAlignment ?? .center,
+        mainAxisSize: isExpand ? .max : .min,
+        crossAxisAlignment: iconVerticalAlignment ?? .center,
         children: [
           icon != null
               ? Row(mainAxisSize: .min, children: [icon!, SizedBox(width: 5)])
               : SizedBox.shrink(),
-          ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
-            child: Container(
-              decoration: isUseUnderline == true
-                  ? BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: style?.color ?? Colors.black,
-                          width: 1.2,
-                        ),
-                      ),
-                    )
-                  : null,
-              padding: const EdgeInsets.only(bottom: 1),
-              child: Text(
-                text,
-                style: style?.copyWith(
-                  decoration: TextDecoration.none,
-                  overflow: overflow,
-                ),
-              ),
-            ),
-          ),
+          isExpand
+              ? Flexible(
+                  child: _buildTextContainer(),
+                )
+              : _buildTextContainer(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTextContainer() {
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: maxWidth ?? double.infinity,
+      ),
+      child: Container(
+        decoration: isUseUnderline == true
+            ? BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: style?.color ?? Colors.black,
+                    width: 1.2,
+                  ),
+                ),
+              )
+            : null,
+        padding: const EdgeInsets.only(bottom: 1),
+        child: Text(
+          text,
+          softWrap: true,
+          overflow: overflow,
+          style: style?.copyWith(
+            decoration: TextDecoration.none,
+          ),
+        ),
       ),
     );
   }
