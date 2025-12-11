@@ -63,9 +63,7 @@ class XText extends StatelessWidget {
               ? Row(mainAxisSize: .min, children: [icon!, SizedBox(width: 5)])
               : SizedBox.shrink(),
           isExpand
-              ? Flexible(
-                  child: _buildTextContainer(),
-                )
+              ? Flexible(child: _buildTextContainer())
               : _buildTextContainer(),
         ],
       ),
@@ -74,9 +72,7 @@ class XText extends StatelessWidget {
 
   Widget _buildTextContainer() {
     return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: maxWidth ?? double.infinity,
-      ),
+      constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
       child: Container(
         decoration: isUseUnderline == true
             ? BoxDecoration(
@@ -93,9 +89,7 @@ class XText extends StatelessWidget {
           text,
           softWrap: true,
           overflow: overflow,
-          style: style?.copyWith(
-            decoration: TextDecoration.none,
-          ),
+          style: style?.copyWith(decoration: TextDecoration.none),
         ),
       ),
     );
