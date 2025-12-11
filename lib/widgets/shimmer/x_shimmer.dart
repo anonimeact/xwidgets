@@ -18,10 +18,13 @@ import 'package:flutter/widgets.dart';
 class XShimmer extends StatefulWidget {
   /// The child widget to display with shimmer effect.
   final Widget child;
+
   /// The duration of the shimmer animation.
   final Duration duration;
+
   /// Base color of the shimmer (background color).
   final Color baseColor;
+
   /// Highlight color of the shimmer (the brighter moving part).
   final Color highlightColor;
 
@@ -77,8 +80,12 @@ class _XShimmerState extends State<XShimmer>
               begin: Alignment(-1, -0.3),
               end: Alignment(1, 0.3),
               colors: [
-                widget.baseColor.withValues(alpha: 0.6), // base color with transparency
-                widget.highlightColor.withValues(alpha: 0.3), // shimmer highlight
+                widget.baseColor.withValues(
+                  alpha: 0.6,
+                ), // base color with transparency
+                widget.highlightColor.withValues(
+                  alpha: 0.3,
+                ), // shimmer highlight
                 widget.baseColor.withValues(alpha: 0.6),
               ],
               // stops define the position of the gradient highlight
@@ -89,7 +96,8 @@ class _XShimmerState extends State<XShimmer>
               ],
             ).createShader(rect);
           },
-          blendMode: BlendMode.srcATop, // blend the gradient on top of the child
+          blendMode:
+              BlendMode.srcATop, // blend the gradient on top of the child
           child: widget.child,
         );
       },

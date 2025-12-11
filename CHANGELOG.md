@@ -1,3 +1,7 @@
+## 1.0.3
+
+* New XShimmer custom widget
+
 ## 1.0.1
 
 * Add wrap mode in XText

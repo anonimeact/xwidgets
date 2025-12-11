@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xwidgets_pack/widgets/shimmer/x_shimmer.dart';
+
 /// A rectangular placeholder widget that shows a shimmer animation.
 ///
 /// [XSkeleton] is typically used as a loading placeholder for text lines,
@@ -15,8 +16,10 @@ import 'package:xwidgets_pack/widgets/shimmer/x_shimmer.dart';
 class XSkeleton extends StatelessWidget {
   /// The height of the skeleton placeholder. Default is 16.
   final double height;
+
   /// The width of the skeleton placeholder. Default is double.infinity.
   final double width;
+
   /// The border radius of the placeholder rectangle.
   final BorderRadius borderRadius;
 
