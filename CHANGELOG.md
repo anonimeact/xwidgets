@@ -1,3 +1,7 @@
+## 1.0.5
+
+* Add content padding option on XTextField widget
+
 ## 1.0.4
 
 * Add textAlign option in XTextField

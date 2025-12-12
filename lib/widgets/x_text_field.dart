@@ -59,6 +59,7 @@ class XTextField extends StatefulWidget {
     this.isReadOnly = false,
     this.isObscureText = false,
     this.textAlign = .start,
+    this.contentPadding,
   });
 
   /// Controller for reading and modifying the text displayed.
@@ -68,6 +69,8 @@ class XTextField extends StatefulWidget {
   final TextStyle? textStyle;
 
   final TextAlign textAlign;
+
+  final EdgeInsets? contentPadding;
 
   /// The label placed above the field.
   final String? label;
@@ -289,6 +292,7 @@ class _XTextFieldState extends State<XTextField> {
         onTap: onTapAction ?? widget.onTap,
         textAlign: widget.textAlign,
         decoration: InputDecoration(
+          contentPadding: widget.contentPadding,
           labelText: widget.labelOnLine,
           floatingLabelBehavior: FloatingLabelBehavior.always,
           hintText: widget.hintText,
@@ -503,14 +507,17 @@ class _XTextFieldState extends State<XTextField> {
   }
 
   Future<void> _showTimePicker() async {
+    final ctx = context;
     final picked = await showTimePicker(
-      context: context,
+      context: ctx,
       initialTime: _selectedTime ?? TimeOfDay.now(),
     );
 
+    if (!ctx.mounted) return;
+
     if (picked != null) {
       _selectedTime = picked;
-      _controller.text = picked.format(context);
+      _controller.text = picked.format(ctx);
       widget.onTimeSelected?.call(picked);
       _validate(_controller.text);
       setState(() {});

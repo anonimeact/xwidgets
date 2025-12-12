@@ -116,6 +116,7 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
               ),
               XSpacer(height: 16),
               XTextField(
+                contentPadding: EdgeInsets.symmetric(horizontal: 10),
                 labelOnLine: 'Nama',
                 hintText: 'Siapa namamu?',
                 textAlign: .center,
