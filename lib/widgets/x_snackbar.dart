@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:xwidgets_pack/models/x_snackbar_config.dart';
 
 /// A utility class for displaying styled snackbars at the top or bottom of the
 /// screen. Works with `Overlay` for top-positioned snackbars and uses the
 /// native Flutter `SnackBar` for bottom-positioned snackbars.
 ///
-/// Attach the provided [scaffoldMessengerKey] to your `MaterialApp`:
+/// Attach the provided [navigatorKey] to your `MaterialApp`:
 ///
 /// ```dart
 /// MaterialApp(
-///   scaffoldMessengerKey: XSnackbar.scaffoldMessengerKey,
+///   navigatorKey: XSnackbar.navigatorKey,
 ///   home: MyApp(),
 /// )
 /// ```
@@ -23,13 +24,9 @@ import 'package:flutter/material.dart';
 /// ```
 class XSnackbar {
   /// A global key that must be assigned to the app's `MaterialApp` in order
-  /// for XSnackbar to access the current [ScaffoldMessengerState].
+  /// for XSnackbar to access the current [NavigatorState].
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
-
-  // ---------------------------------------------------------------------------
-  // PUBLIC API – PRESET SNACKBAR TYPES
-  // ---------------------------------------------------------------------------
 
   /// Shows an informational snackbar.
   ///
@@ -41,25 +38,15 @@ class XSnackbar {
     String message, {
     String? title,
     XSnackbarPosition position = XSnackbarPosition.bottom,
-    Duration duration = const Duration(seconds: 2),
-    IconData? leadingIcon,
-    bool floating = true,
-    EdgeInsets? margin,
-    ShapeBorder? shape,
-    String? actionLabel,
+    XSnackbarConfig config = const XSnackbarConfig(),
     VoidCallback? onAction,
   }) {
     _show(
       message: message,
       title: title,
       type: const XSnackbarType.info(),
+      config: config,
       position: position,
-      duration: duration,
-      leadingIcon: leadingIcon,
-      isFloating: floating,
-      margin: margin,
-      shape: shape,
-      actionLabel: actionLabel,
       onAction: onAction,
     );
   }
@@ -69,25 +56,15 @@ class XSnackbar {
     String message, {
     String? title,
     XSnackbarPosition position = XSnackbarPosition.bottom,
-    Duration duration = const Duration(seconds: 2),
-    IconData? leadingIcon,
-    bool floating = true,
-    EdgeInsets? margin,
-    ShapeBorder? shape,
-    String? actionLabel,
+    XSnackbarConfig config = const XSnackbarConfig(),
     VoidCallback? onAction,
   }) {
     _show(
       message: message,
       title: title,
       type: const XSnackbarType.success(),
+      config: config,
       position: position,
-      duration: duration,
-      leadingIcon: leadingIcon,
-      isFloating: floating,
-      margin: margin,
-      shape: shape,
-      actionLabel: actionLabel,
       onAction: onAction,
     );
   }
@@ -97,25 +74,15 @@ class XSnackbar {
     String message, {
     String? title,
     XSnackbarPosition position = XSnackbarPosition.bottom,
-    Duration duration = const Duration(seconds: 2),
-    IconData? leadingIcon,
-    bool floating = true,
-    EdgeInsets? margin,
-    ShapeBorder? shape,
-    String? actionLabel,
+    XSnackbarConfig config = const XSnackbarConfig(),
     VoidCallback? onAction,
   }) {
     _show(
       message: message,
       title: title,
       type: const XSnackbarType.error(),
+      config: config,
       position: position,
-      duration: duration,
-      leadingIcon: leadingIcon,
-      isFloating: floating,
-      margin: margin,
-      shape: shape,
-      actionLabel: actionLabel,
       onAction: onAction,
     );
   }
@@ -125,25 +92,15 @@ class XSnackbar {
     String message, {
     String? title,
     XSnackbarPosition position = XSnackbarPosition.bottom,
-    Duration duration = const Duration(seconds: 2),
-    IconData? leadingIcon,
-    bool floating = true,
-    EdgeInsets? margin,
-    ShapeBorder? shape,
-    String? actionLabel,
+    XSnackbarConfig config = const XSnackbarConfig(),
     VoidCallback? onAction,
   }) {
     _show(
       message: message,
       title: title,
       type: const XSnackbarType.warning(),
+      config: config,
       position: position,
-      duration: duration,
-      leadingIcon: leadingIcon,
-      isFloating: floating,
-      margin: margin,
-      shape: shape,
-      actionLabel: actionLabel,
       onAction: onAction,
     );
   }
@@ -160,135 +117,73 @@ class XSnackbar {
   /// ```
   static void custom(
     String message, {
-    required Color color,
     String? title,
+    Color color = Colors.lightBlue,
     XSnackbarPosition position = XSnackbarPosition.bottom,
-    Duration duration = const Duration(seconds: 2),
-    IconData? leadingIcon,
-    bool floating = true,
-    EdgeInsets? margin,
-    ShapeBorder? shape,
-    String? actionLabel,
+    XSnackbarConfig config = const XSnackbarConfig(),
     VoidCallback? onAction,
   }) {
     _show(
       message: message,
       title: title,
       type: XSnackbarType.custom(color),
+      config: config,
       position: position,
-      duration: duration,
-      leadingIcon: leadingIcon,
-      isFloating: floating,
-      margin: margin,
-      shape: shape,
-      actionLabel: actionLabel,
       onAction: onAction,
     );
   }
-
-  // ---------------------------------------------------------------------------
-  // INTERNAL HANDLER
-  // ---------------------------------------------------------------------------
 
   /// Internal shared logic that routes either to the top snackbar (Overlay)
   /// or the bottom snackbar (native Flutter Snackbar).
   static void _show({
     required String message,
     required XSnackbarType type,
-    required XSnackbarPosition position,
-    required Duration duration,
-    required bool isFloating,
     String? title,
-    IconData? leadingIcon,
-    EdgeInsets? margin,
-    ShapeBorder? shape,
-    String? actionLabel,
+    XSnackbarPosition position = XSnackbarPosition.bottom,
+    XSnackbarConfig config = const XSnackbarConfig(),
     VoidCallback? onAction,
   }) {
-    final overlay = navigatorKey.currentState?.overlay;
-    if (overlay == null) return; // overlay belum siap
-
-    _showSnackbar(
-      message: message,
-      type: type,
-      duration: duration,
-      title: "Title",
-      leadingIcon: leadingIcon,
-      isTop: position == XSnackbarPosition.top,
-      floating: isFloating,
-      margin: margin,
-      shape: shape,
-      actionLabel: actionLabel,
-      onAction: onAction,
-    );
-    // if (position == XSnackbarPosition.top) {
-    //   _showTopSnackbar(message: message, title: title, type: type, duration: duration, leadingIcon: leadingIcon);
-    // } else {
-    //   _showBottomSnackbar(
-    //     message: message,
-    //     title: title,
-    //     type: type,
-    //     duration: duration,
-    //     leadingIcon: leadingIcon,
-    //     floating: floating,
-    //     margin: margin,
-    //     shape: shape,
-    //     actionLabel: actionLabel,
-    //     onAction: onAction,
-    //   );
-    // }
-  }
-
-  // ---------------------------------------------------------------------------
-  // TOP SNACKBAR (Overlay-based)
-  // ---------------------------------------------------------------------------
-
-  /// Displays a snackbar at the top of the screen using an OverlayEntry.
-  ///
-  static void _showSnackbar({
-    required String message,
-    required XSnackbarType type,
-    required Duration duration,
-    String? title,
-    IconData? leadingIcon,
-    String? actionLabel,
-    VoidCallback? onAction,
-    bool isTop = true,
-    bool floating = false,
-    EdgeInsets? margin,
-    ShapeBorder? shape,
-  }) {
+    bool snackbarRemoved = false;
     final overlay = navigatorKey.currentState?.overlay;
     if (overlay == null) return; // overlay belum siap
 
     final color = type.color ?? Colors.blue;
+    final isTop = position == XSnackbarPosition.top;
+    final isFloating = config.floating == true;
 
     late OverlayEntry entry;
+    void removeEntry() {
+      if (!snackbarRemoved) {
+        snackbarRemoved = true;
+        entry.remove();
+      }
+    }
+
     entry = OverlayEntry(
       builder: (context) => Positioned(
         top: isTop ? MediaQuery.of(context).padding.top + 12 : null,
-        bottom: isTop ? null : (floating ? (margin?.bottom ?? 16) : 0),
-        left: floating ? (margin?.left ?? 16) : 0,
-        right: floating ? (margin?.right ?? 16) : 0,
+        bottom: isTop
+            ? null
+            : isFloating
+            ? (config.margin.bottom)
+            : 0,
+        left: isFloating ? (config.margin.left) : 0,
+        right: isFloating ? (config.margin.right) : 0,
         child: Material(
           elevation: 6,
           color: color,
-          shape: floating && !isTop
-              ? (shape ??
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ))
+          shape: isFloating && !isTop
+              ? RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(config.radius),
+                )
               : null,
-          borderRadius: isTop ? BorderRadius.circular(12) : null,
+          borderRadius: isTop ? BorderRadius.circular(config.radius) : null,
           child: Padding(
             padding: const EdgeInsets.all(14),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (leadingIcon != null) ...[
-                  Icon(leadingIcon, color: Colors.white),
-                  const SizedBox(width: 12),
-                ],
+                ...[config.leadingIcon, const SizedBox(width: 12)],
                 Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -311,14 +206,14 @@ class XSnackbar {
                     ],
                   ),
                 ),
-                if (actionLabel != null && onAction != null)
+                if (config.actionLabel != null && onAction != null)
                   TextButton(
                     onPressed: () {
                       onAction();
-                      entry.remove();
+                      removeEntry();
                     },
                     child: Text(
-                      actionLabel,
+                      config.actionLabel ?? '',
                       style: const TextStyle(color: Colors.white),
                     ),
                   ),
@@ -330,13 +225,9 @@ class XSnackbar {
     );
 
     overlay.insert(entry);
-    Future.delayed(duration).then((_) => entry.remove());
+    Future.delayed(config.duration).then((_) => removeEntry());
   }
 }
-
-// -----------------------------------------------------------------------------
-// SNACKBAR POSITION ENUM
-// -----------------------------------------------------------------------------
 
 /// Determines where the snackbar will be displayed.
 ///
@@ -363,11 +254,11 @@ class XSnackbarType {
   const XSnackbarType.info() : color = null;
 
   /// Success snackbar (green).
-  const XSnackbarType.success() : color = const Color(0xFF2E7D32);
+  const XSnackbarType.success() : color = Colors.green;
 
   /// Error snackbar (red).
-  const XSnackbarType.error() : color = const Color(0xFFC62828);
+  const XSnackbarType.error() : color = Colors.redAccent;
 
   /// Warning snackbar (orange).
-  const XSnackbarType.warning() : color = const Color(0xFFEF6C00);
+  const XSnackbarType.warning() : color = Colors.amber;
 }

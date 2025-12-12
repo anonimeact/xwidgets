@@ -56,6 +56,8 @@ class XCard extends StatelessWidget {
   final double? blurRadius;
 
   final double? width;
+  final double? height;
+  final AlignmentGeometry? alignment;
 
   /// Creates an [XCard] with customizable styling options.
   const XCard({
@@ -68,6 +70,8 @@ class XCard extends StatelessWidget {
     this.blurRadius,
     this.shadowColor,
     this.width,
+    this.height,
+    this.alignment,
   });
 
   @override
@@ -76,8 +80,10 @@ class XCard extends StatelessWidget {
       color: Colors.transparent,
       child: Container(
         width: width ?? double.infinity,
+        height: height,
         margin: margin,
         padding: padding,
+        alignment: alignment,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(radius),
           color: background ?? Theme.of(context).canvasColor,

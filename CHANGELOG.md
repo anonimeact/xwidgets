@@ -1,3 +1,7 @@
+## 1.0.3
+
+* Enhance XSnackbar & XShimmer widget
+
 ## 1.0.2
 
 * New XShimmer custom widget

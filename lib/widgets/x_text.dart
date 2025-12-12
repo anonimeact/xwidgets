@@ -39,12 +39,14 @@ class XText extends StatelessWidget {
     this.onTap,
     this.maxWidth,
     this.overflow,
+    this.textAlign = .start,
   });
 
   final String text;
   final Widget? icon;
   final bool isExpand;
   final TextStyle? style;
+  final TextAlign textAlign;
   final bool? isUseUnderline;
   final CrossAxisAlignment? iconVerticalAlignment;
   final Function()? onTap;
@@ -90,6 +92,7 @@ class XText extends StatelessWidget {
           softWrap: true,
           overflow: overflow,
           style: style?.copyWith(decoration: TextDecoration.none),
+          textAlign: textAlign,
         ),
       ),
     );
