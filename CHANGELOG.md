@@ -1,3 +1,9 @@
+## 1.0.4
+
+* Add textAlign option in XTextField
+* Add XHeight and XWidth Widget
+* Add option widthInfinity to make button width match parent
+
 ## 1.0.3
 
 * Enhance XSnackbar & XShimmer widget

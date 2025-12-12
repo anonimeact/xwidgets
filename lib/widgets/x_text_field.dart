@@ -58,6 +58,7 @@ class XTextField extends StatefulWidget {
     this.onTimeSelected,
     this.isReadOnly = false,
     this.isObscureText = false,
+    this.textAlign = .start,
   });
 
   /// Controller for reading and modifying the text displayed.
@@ -65,6 +66,8 @@ class XTextField extends StatefulWidget {
 
   /// The text style applied to the field’s content.
   final TextStyle? textStyle;
+
+  final TextAlign textAlign;
 
   /// The label placed above the field.
   final String? label;
@@ -284,6 +287,7 @@ class _XTextFieldState extends State<XTextField> {
         readOnly: isReadOnly ?? !widget.isEnable || widget.isReadOnly,
         enabled: isEnable ?? widget.isEnable,
         onTap: onTapAction ?? widget.onTap,
+        textAlign: widget.textAlign,
         decoration: InputDecoration(
           labelText: widget.labelOnLine,
           floatingLabelBehavior: FloatingLabelBehavior.always,

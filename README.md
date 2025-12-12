@@ -60,7 +60,10 @@ XText(
   style: TextStyle(fontWeight: FontWeight.normal, fontSize: 18),
 ),
 
+// Make a static gap / spacer widget
 XSpacer(height: 8),
+XHeight(8),
+XWidth(8),
 
 XSingleDashedLine(),
 

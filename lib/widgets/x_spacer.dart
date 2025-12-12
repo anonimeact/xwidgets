@@ -48,3 +48,25 @@ class XSpacer extends StatelessWidget {
     return height != null ? SizedBox(height: height) : SizedBox(width: width);
   }
 }
+
+class XHeight extends StatelessWidget {
+  const XHeight(this.height, {super.key});
+
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return XSpacer(height: height);
+  }
+}
+
+class XWidth extends StatelessWidget {
+  const XWidth(this.width, {super.key});
+
+  final double width;
+
+  @override
+  Widget build(BuildContext context) {
+    return XSpacer(width: width);
+  }
+}

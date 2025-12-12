@@ -105,6 +105,7 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
               XSpacer(height: 16),
               XButton(
                 height: 56,
+                widthInfinity: true,
                 isLoading: isLoadingShimmerCustom,
                 onPressed: () async {
                   setState(() => isLoadingShimmerCustom = true);
@@ -114,8 +115,12 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
                 child: Text('XShimmer Loading View'),
               ),
               XSpacer(height: 16),
-              XTextField(labelOnLine: 'Nama', hintText: 'Siapa namamu?'),
-              XSpacer(height: 8),
+              XTextField(
+                labelOnLine: 'Nama',
+                hintText: 'Siapa namamu?',
+                textAlign: .center,
+              ),
+              XHeight(8),
               XTextField(
                 label: 'Date Picker',
                 fieldType: .datepicker,

@@ -27,10 +27,11 @@ class XButton extends StatelessWidget {
     this.style,
     this.isLoading = false,
     this.isEnable = true,
-    this.height,
     this.isForceTap = false,
     this.child,
     this.width,
+    this.height,
+    this.widthInfinity = false,
   });
 
   /// Called when the button is tapped.
@@ -56,7 +57,10 @@ class XButton extends StatelessWidget {
 
   /// Custom height of the button. Defaults to 48.
   final double? height;
+
   final double? width;
+
+  final bool widthInfinity;
 
   /// Custom widget to replace the label text, useful for advanced text layouts.
   final Widget? child;
@@ -76,7 +80,7 @@ class XButton extends StatelessWidget {
 
     return SizedBox(
       height: height ?? 48,
-      width: width ?? double.infinity,
+      width: widthInfinity ? double.infinity : width,
       child:
           isLoading // Show loading indicator instead of button.
           ? Center(
