@@ -29,6 +29,8 @@ class XTextField extends StatefulWidget {
     super.key,
     this.controller,
     this.textStyle,
+    this.labelStyle,
+    this.hintStyle,
     this.label,
     this.labelOnLine,
     this.hintText,
@@ -67,6 +69,10 @@ class XTextField extends StatefulWidget {
 
   /// The text style applied to the field’s content.
   final TextStyle? textStyle;
+
+  final TextStyle? labelStyle;
+
+  final TextStyle? hintStyle;
 
   final TextAlign textAlign;
 
@@ -227,7 +233,7 @@ class _XTextFieldState extends State<XTextField> {
           Text(
             text,
             style:
-                widget.textStyle ??
+                widget.labelStyle ??
                 const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
           ),
           if (widget.isRequired)
@@ -291,11 +297,14 @@ class _XTextFieldState extends State<XTextField> {
         enabled: isEnable ?? widget.isEnable,
         onTap: onTapAction ?? widget.onTap,
         textAlign: widget.textAlign,
+        style: widget.textStyle,
         decoration: InputDecoration(
           contentPadding: widget.contentPadding,
           labelText: widget.labelOnLine,
+          labelStyle: widget.labelStyle,
           floatingLabelBehavior: FloatingLabelBehavior.always,
           hintText: widget.hintText,
+          hintStyle: widget.hintStyle,
           prefixIcon: widget.prefixIcon,
           suffixIcon: suffixIcon ?? widget.suffixIcon,
           border: style.outline(),
