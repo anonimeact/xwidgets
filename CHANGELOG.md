@@ -1,3 +1,7 @@
+## 1.0.7
+
+* Enhance XTextField Widget
+
 ## 1.0.6
 
 * Adjust textstyle in XTextField

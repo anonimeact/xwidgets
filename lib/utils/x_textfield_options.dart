@@ -81,12 +81,3 @@ class XTextFieldTimePickerOptions {
     this.timeFormat = 'HH:mm',
   });
 }
-
-/// Holds validation logic for [XTextField].
-class XTextFieldValidator {
-  /// A function returning an error message or `null` if valid.
-  final String? Function(String?)? validator;
-
-  /// Creates a new [XTextFieldValidator] instance.
-  const XTextFieldValidator({this.validator});
-}

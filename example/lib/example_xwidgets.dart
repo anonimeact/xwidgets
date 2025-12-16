@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:xwidgets_pack/models/x_snackbar_config.dart';
+import 'package:xwidgets_pack/utils/x_form_validators.dart';
 import 'package:xwidgets_pack/utils/x_textfield_options.dart';
 import 'package:xwidgets_pack/widgets/shimmer/x_shimmer.dart';
 import 'package:xwidgets_pack/widgets/shimmer/x_shimmer_child.dart';
@@ -18,6 +19,8 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
   var isLoadingButtonTitle = false;
   var isLoadingButtonCustom = false;
   var isLoadingShimmerCustom = false;
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -115,12 +118,34 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
                 child: Text('XShimmer Loading View'),
               ),
               XSpacer(height: 16),
-              XTextField(
-                contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                labelOnLine: 'Nama',
-                hintText: 'Siapa namamu?',
-                textAlign: .center,
+              Form(
+                key: _formKey,
+                child: XTextField(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 2),
+                  labelOnLine: 'Nama',
+                  hintText: 'Siapa namamu?',
+                  textAlign: .center,
+                  validator: XFormValidator.combine([
+                    XFormValidator.required(
+                      message: 'Field tidak boleh kosong',
+                    ),
+                    XFormValidator.minLength(
+                      3,
+                      message: 'Minimum nama cabang 3 karakter',
+                    ),
+                    XFormValidator.maxLength(
+                      50,
+                      message: 'Maksimal nama cabang 50 karakter',
+                    ),
+                  ]),
+                ),
               ),
+
+              XButton(
+                onPressed: () => _formKey.currentState?.validate(),
+                label: 'Validasi Form',
+              ),
+
               XHeight(8),
               XTextField(
                 label: 'Date Picker',
@@ -132,16 +157,20 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
                 labelOnLine: 'Date Time labelOnLine',
                 fieldType: .timepicker,
                 suffixIcon: Icon(Icons.timelapse_outlined),
+                onTimeSelected: (time) =>
+                    XSnackbar.success('DateTime ${time?.hour}', position: .top),
               ),
               XSpacer(height: 8),
               XTextField(
                 label: 'File Picker',
                 isRequired: true,
                 fieldType: .file,
+                onFileSelected: (file) =>
+                    XSnackbar.success('DateTime ${file?.path}', position: .top),
               ),
               XSpacer(height: 8),
               XTextField(
-                label: 'Date Time labelOnLine',
+                label: 'Dropdown labelOnLine',
                 dropdownOptions: XTextFieldDropdownOptions(
                   items: ["Sumatera", 'Jawa', 'Kalimantan'],
                   itemAsString: (item) => item,

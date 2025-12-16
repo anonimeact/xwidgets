@@ -60,108 +60,75 @@ class XTextField extends StatefulWidget {
     this.onTimeSelected,
     this.isReadOnly = false,
     this.isObscureText = false,
-    this.textAlign = .start,
+    this.textAlign = TextAlign.start,
     this.contentPadding,
+    this.autovalidateMode,
+    this.asyncErrorText,
+    this.onSaved,
   });
 
-  /// Controller for reading and modifying the text displayed.
   final TextEditingController? controller;
-
-  /// The text style applied to the field’s content.
   final TextStyle? textStyle;
-
   final TextStyle? labelStyle;
-
   final TextStyle? hintStyle;
-
   final TextAlign textAlign;
-
   final EdgeInsets? contentPadding;
-
-  /// The label placed above the field.
   final String? label;
-
-  /// The inline label placed beside the field.
   final String? labelOnLine;
-
-  /// Placeholder text shown when the field is empty.
   final String? hintText;
-
-  /// Whether the field is required.
   final bool isRequired;
-
-  /// Whether the field is enabled.
   final bool isEnable;
-
   final bool isReadOnly;
-
-  /// The type of field that will be displayed.
   final XTextFieldType fieldType;
-
-  /// Icon displayed at the beginning of the field.
   final Widget? prefixIcon;
-
-  /// Icon displayed at the end of the field.
   final Widget? suffixIcon;
-
-  /// Determines the action button on the keyboard.
   final TextInputAction textInputAction;
-
-  /// The keyboard type to show.
   final TextInputType inputType;
-
-  /// How text should be capitalized.
   final TextCapitalization textCapitalization;
-
-  /// Minimum visible lines.
   final int minLines;
-
-  /// Maximum visible lines.
   final int maxLines;
-
-  /// Maximum allowed character count.
   final int maxLength;
-
-  /// Whether a custom counter should be displayed.
   final bool isShowCounter;
-
   final bool isObscureText;
-
-  /// Fires when the text content changes.
   final void Function(String)? onChanged;
-
-  /// Fires when the field is tapped.
   final VoidCallback? onTap;
-
-  /// A customizable style applied to borders and shape.
   final XTextFieldStyle? style;
-
-  /// File picker configuration.
   final XTextFieldFileOptions? fileOptions;
-
-  /// Dropdown configuration.
   final XTextFieldDropdownOptions? dropdownOptions;
-
-  /// Date picker configuration.
   final XTextFieldDatePickerOptions? datePickerOptions;
-
-  /// Time picker configuration.
   final XTextFieldTimePickerOptions? timePickerOptions;
 
-  /// Field validator.
-  final XTextFieldValidator? validator;
+  /// Field validator - accepts standard Flutter validator function
+  /// Use XFormValidator for common validations:
+  /// ```dart
+  /// validator: XFormValidator.required()
+  /// validator: XFormValidator.combine([
+  ///   XFormValidator.required(),
+  ///   XFormValidator.email(),
+  /// ])
+  /// ```
+  final String? Function(String?)? validator;
 
-  /// File selected callback.
   final void Function(File?)? onFileSelected;
-
-  /// Dropdown selection callback.
   final void Function(dynamic)? onDropdownChanged;
-
-  /// Date selected callback.
   final void Function(DateTime?)? onDateSelected;
-
-  /// Time selected callback.
   final void Function(TimeOfDay?)? onTimeSelected;
+
+  /// Optional callback that's called when formKey.currentState!.save() is invoked.
+  /// This is a standard Flutter Form API feature for collecting form data.
+  /// If you prefer using controllers, you can ignore this.
+  final void Function(String?)? onSaved;
+
+  /// Controls when validation occurs. See [AutovalidateMode] for details.
+  /// - [AutovalidateMode.disabled]: No auto validation (default)
+  /// - [AutovalidateMode.always]: Validate immediately
+  /// - [AutovalidateMode.onUserInteraction]: Validate after first user interaction
+  final AutovalidateMode? autovalidateMode;
+
+  /// For async/server-side validation errors (e.g., "email already exists")
+  /// This is separate from the synchronous validator and will be displayed
+  /// alongside validator errors. Clear this when user changes the field.
+  final String? asyncErrorText;
 
   @override
   State<XTextField> createState() => _XTextFieldState();
@@ -171,12 +138,9 @@ class _XTextFieldState extends State<XTextField> {
   late final TextEditingController _controller;
   final FocusNode _focusNode = FocusNode();
 
-  // ignore: unused_field
   File? _selectedFile;
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
-
-  String? _errorText;
 
   bool get _controllerIsExternal => widget.controller != null;
 
@@ -186,29 +150,93 @@ class _XTextFieldState extends State<XTextField> {
 
     _controller = widget.controller ?? TextEditingController();
 
+    // Add listener to external controller
+    if (_controllerIsExternal) {
+      _controller.addListener(_onControllerChanged);
+    }
+
     _selectedDate = widget.datePickerOptions?.initialDate;
     _selectedTime = widget.timePickerOptions?.initialTime;
 
+    // Set initial date value
     if (widget.fieldType == XTextFieldType.datepicker &&
         _selectedDate != null) {
       _controller.text = DateFormat(
-        widget.datePickerOptions?.dateFormat,
+        widget.datePickerOptions?.dateFormat ?? 'dd/MM/yyyy',
       ).format(_selectedDate!);
     }
+  }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Safe to use context here for time formatting
     if (widget.fieldType == XTextFieldType.timepicker &&
-        _selectedTime != null) {
-      _controller.text = _selectedTime!.format(context);
+        _selectedTime != null &&
+        _controller.text.isEmpty) {
+      _controller.text = _formatTimeOfDay(
+        _selectedTime!,
+        widget.timePickerOptions?.timeFormat,
+      );
+    }
+  }
+
+  @override
+  void didUpdateWidget(XTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Update controller if changed
+    if (oldWidget.controller != widget.controller) {
+      if (oldWidget.controller != null) {
+        oldWidget.controller!.removeListener(_onControllerChanged);
+      }
+      if (widget.controller != null) {
+        widget.controller!.addListener(_onControllerChanged);
+      }
+    }
+
+    // Update date if initialDate changed
+    if (widget.fieldType == XTextFieldType.datepicker &&
+        oldWidget.datePickerOptions?.initialDate !=
+            widget.datePickerOptions?.initialDate) {
+      _selectedDate = widget.datePickerOptions?.initialDate;
+      if (_selectedDate != null) {
+        _controller.text = DateFormat(
+          widget.datePickerOptions?.dateFormat ?? 'dd/MM/yyyy',
+        ).format(_selectedDate!);
+      }
+    }
+
+    // Update time if initialTime changed
+    if (widget.fieldType == XTextFieldType.timepicker &&
+        oldWidget.timePickerOptions?.initialTime !=
+            widget.timePickerOptions?.initialTime) {
+      _selectedTime = widget.timePickerOptions?.initialTime;
+      if (_selectedTime != null && mounted) {
+        _controller.text = _formatTimeOfDay(
+          _selectedTime!,
+          widget.timePickerOptions?.timeFormat,
+        );
+      }
     }
   }
 
   @override
   void dispose() {
-    if (!_controllerIsExternal) {
+    if (_controllerIsExternal) {
+      _controller.removeListener(_onControllerChanged);
+    } else {
       _controller.dispose();
     }
     _focusNode.dispose();
     super.dispose();
+  }
+
+  void _onControllerChanged() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -217,10 +245,9 @@ class _XTextFieldState extends State<XTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (label != null) ...[_buildLabel(label)],
+        if (label != null) _buildLabel(label),
         _buildFieldType(),
         if (widget.isShowCounter) _buildCounter(),
-        if (_errorText != null) _buildErrorText(),
       ],
     );
   }
@@ -256,16 +283,6 @@ class _XTextFieldState extends State<XTextField> {
     );
   }
 
-  Widget _buildErrorText() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 4),
-      child: Text(
-        _errorText!,
-        style: const TextStyle(color: Colors.red, fontSize: 12),
-      ),
-    );
-  }
-
   Widget _buildFieldType() {
     switch (widget.fieldType) {
       case XTextFieldType.normal:
@@ -281,13 +298,35 @@ class _XTextFieldState extends State<XTextField> {
     }
   }
 
+  /// Builds the validator function combining sync and async validations
+  String? _buildValidator(String? value) {
+    // First check async error (server-side validation)
+    if (widget.asyncErrorText != null && widget.asyncErrorText!.isNotEmpty) {
+      return widget.asyncErrorText;
+    }
+
+    // Then run the synchronous validator
+    if (widget.validator != null) {
+      return widget.validator!(value);
+    }
+
+    return null;
+  }
+
+  /// Builds validator for dropdown (accepts dynamic type)
+  String? _buildDropdownValidator(dynamic value) {
+    // Convert to string for validation
+    final stringValue = value?.toString();
+    return _buildValidator(stringValue);
+  }
+
   Widget _buildNormalField({
     VoidCallback? onTapAction,
     bool? isReadOnly,
     bool? isEnable,
     Widget? suffixIcon,
   }) {
-    final style = widget.style ?? XTextFieldStyle();
+    final style = widget.style ?? const XTextFieldStyle();
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: TextFormField(
@@ -298,6 +337,14 @@ class _XTextFieldState extends State<XTextField> {
         onTap: onTapAction ?? widget.onTap,
         textAlign: widget.textAlign,
         style: widget.textStyle,
+        obscureText: widget.isObscureText,
+        keyboardType: widget.inputType,
+        textCapitalization: widget.textCapitalization,
+        textInputAction: widget.textInputAction,
+        minLines: widget.minLines,
+        maxLines: widget.maxLines,
+        maxLength: widget.maxLength,
+        autovalidateMode: widget.autovalidateMode ?? AutovalidateMode.disabled,
         decoration: InputDecoration(
           contentPadding: widget.contentPadding,
           labelText: widget.labelOnLine,
@@ -312,12 +359,12 @@ class _XTextFieldState extends State<XTextField> {
           focusedBorder: style.focusedOutline(),
           errorBorder: style.errorOutline(),
           focusedErrorBorder: style.errorOutline(),
-          errorText: _errorText,
           counterText: '',
         ),
+        validator: _buildValidator,
+        onSaved: widget.onSaved,
         onChanged: (v) {
           widget.onChanged?.call(v);
-          _validate(v);
         },
       ),
     );
@@ -325,12 +372,12 @@ class _XTextFieldState extends State<XTextField> {
 
   Widget _buildFileField() {
     return Stack(
-      alignment: .centerRight,
+      alignment: Alignment.centerRight,
       children: [
         _buildNormalField(isReadOnly: true),
         IconButton(
           onPressed: widget.isEnable ? _showFilePickerBottomSheet : null,
-          icon: widget.suffixIcon ?? Icon(Icons.file_present_sharp),
+          icon: widget.suffixIcon ?? const Icon(Icons.file_present_sharp),
         ),
       ],
     );
@@ -350,7 +397,6 @@ class _XTextFieldState extends State<XTextField> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 12),
-
               Text(
                 fileOpt.filePickerTitle,
                 style: const TextStyle(
@@ -358,9 +404,7 @@ class _XTextFieldState extends State<XTextField> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
               const Divider(height: 20),
-
               if (fileOpt.showCamera)
                 ListTile(
                   leading: const Icon(Icons.camera_alt),
@@ -370,7 +414,6 @@ class _XTextFieldState extends State<XTextField> {
                     _pickCamera();
                   },
                 ),
-
               if (fileOpt.showGallery)
                 ListTile(
                   leading: const Icon(Icons.photo_library),
@@ -380,7 +423,6 @@ class _XTextFieldState extends State<XTextField> {
                     _pickGallery();
                   },
                 ),
-
               if (fileOpt.showDocument)
                 ListTile(
                   leading: const Icon(Icons.insert_drive_file),
@@ -390,7 +432,6 @@ class _XTextFieldState extends State<XTextField> {
                     _pickDocument();
                   },
                 ),
-
               const SizedBox(height: 12),
             ],
           ),
@@ -400,16 +441,28 @@ class _XTextFieldState extends State<XTextField> {
   }
 
   Future<void> _pickDocument() async {
-    final result = await FilePicker.platform.pickFiles(type: FileType.any);
+    try {
+      final result = await FilePicker.platform.pickFiles(type: FileType.any);
 
-    if (result != null && result.files.single.path != null) {
-      final file = File(result.files.single.path!);
+      if (result != null && result.files.single.path != null) {
+        final file = File(result.files.single.path!);
 
-      setState(() => _controller.text = file.path);
-
-      widget.onFileSelected?.call(file);
-
-      _validate(file.path);
+        if (mounted) {
+          setState(() {
+            _selectedFile = file;
+            // Display only filename, not full path
+            _controller.text = _getFileName(file.path);
+          });
+          // Callback gets full file object
+          widget.onFileSelected?.call(file);
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error picking file: $e')));
+      }
     }
   }
 
@@ -417,32 +470,35 @@ class _XTextFieldState extends State<XTextField> {
     final style = widget.style ?? const XTextFieldStyle();
     final opt = widget.dropdownOptions ?? const XTextFieldDropdownOptions();
 
-    return DropdownSearch<dynamic>(
-      items: (filter, loadProps) => opt.items ?? [],
-      selectedItem: opt.selectedItem,
-      itemAsString: opt.itemAsString ?? (item) => item.toString(),
-      compareFn: (a, b) => a == b,
-      onChanged: (value) {
-        widget.onDropdownChanged?.call(value);
-        _validate(value?.toString());
-      },
-      decoratorProps: DropDownDecoratorProps(
-        decoration: InputDecoration(
-          hintText: widget.hintText,
-          prefixIcon: widget.prefixIcon,
-          suffixIcon: widget.suffixIcon,
-          border: style.outline(),
-          enabledBorder: style.outline(),
-          focusedBorder: style.focusedOutline(),
-          errorBorder: style.errorOutline(),
-          focusedErrorBorder: style.errorOutline(),
-          errorText: _errorText,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: DropdownSearch<dynamic>(
+        items: (filter, loadProps) => opt.items ?? [],
+        selectedItem: opt.selectedItem,
+        itemAsString: opt.itemAsString ?? (item) => item.toString(),
+        compareFn: (a, b) => a == b,
+        onChanged: (value) {
+          widget.onDropdownChanged?.call(value);
+        },
+        validator: _buildDropdownValidator,
+        autoValidateMode: widget.autovalidateMode ?? AutovalidateMode.disabled,
+        decoratorProps: DropDownDecoratorProps(
+          decoration: InputDecoration(
+            hintText: widget.hintText,
+            prefixIcon: widget.prefixIcon,
+            suffixIcon: widget.suffixIcon,
+            border: style.outline(),
+            enabledBorder: style.outline(),
+            focusedBorder: style.focusedOutline(),
+            errorBorder: style.errorOutline(),
+            focusedErrorBorder: style.errorOutline(),
+          ),
         ),
-      ),
-      popupProps: PopupProps.menu(
-        showSearchBox: opt.showSearchBox,
-        fit: FlexFit.loose,
-        constraints: const BoxConstraints(),
+        popupProps: PopupProps.menu(
+          showSearchBox: opt.showSearchBox,
+          fit: FlexFit.loose,
+          constraints: const BoxConstraints(),
+        ),
       ),
     );
   }
@@ -452,7 +508,7 @@ class _XTextFieldState extends State<XTextField> {
       isReadOnly: true,
       suffixIcon: IconButton(
         onPressed: widget.isEnable ? _showDatePicker : null,
-        icon: widget.suffixIcon ?? Icon(Icons.calendar_month),
+        icon: widget.suffixIcon ?? const Icon(Icons.calendar_month),
       ),
       onTapAction: widget.isEnable ? _showDatePicker : null,
     );
@@ -463,82 +519,147 @@ class _XTextFieldState extends State<XTextField> {
       isReadOnly: true,
       suffixIcon: IconButton(
         onPressed: widget.isEnable ? _showTimePicker : null,
-        icon: widget.suffixIcon ?? Icon(Icons.timer),
+        icon: widget.suffixIcon ?? const Icon(Icons.access_time),
       ),
       onTapAction: widget.isEnable ? _showTimePicker : null,
     );
   }
 
   Future<void> _pickCamera() async {
-    final picker = ImagePicker();
-    final x = await picker.pickImage(source: ImageSource.camera);
+    try {
+      final picker = ImagePicker();
+      final x = await picker.pickImage(source: ImageSource.camera);
 
-    if (x != null) {
-      final file = File(x.path);
-      _selectedFile = file;
-      _controller.text = file.path;
-      widget.onFileSelected?.call(file);
-      _validate(file.path);
-      setState(() {});
+      if (x != null && mounted) {
+        final file = File(x.path);
+        setState(() {
+          _selectedFile = file;
+          // Display only filename, not full path
+          _controller.text = _getFileName(file.path);
+        });
+        // Callback gets full file object
+        widget.onFileSelected?.call(file);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error accessing camera: $e')));
+      }
     }
   }
 
   Future<void> _pickGallery() async {
-    final picker = ImagePicker();
-    final x = await picker.pickImage(source: ImageSource.gallery);
+    try {
+      final picker = ImagePicker();
+      final x = await picker.pickImage(source: ImageSource.gallery);
 
-    if (x != null) {
-      final file = File(x.path);
-      _selectedFile = file;
-      _controller.text = file.path;
-      widget.onFileSelected?.call(file);
-      _validate(file.path);
-      setState(() {});
+      if (x != null && mounted) {
+        final file = File(x.path);
+        setState(() {
+          _selectedFile = file;
+          // Display only filename, not full path
+          _controller.text = _getFileName(file.path);
+        });
+        // Callback gets full file object
+        widget.onFileSelected?.call(file);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error accessing gallery: $e')));
+      }
     }
   }
 
   Future<void> _showDatePicker() async {
+    final dateOpt = widget.datePickerOptions;
     final picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
+      initialDate: _selectedDate ?? dateOpt?.initialDate ?? DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime(2100),
     );
 
-    if (picked != null) {
-      _selectedDate = picked;
-      final fmt = widget.datePickerOptions?.dateFormat ?? 'dd/MM/yyyy';
-      _controller.text = DateFormat(fmt).format(picked);
+    if (picked != null && mounted) {
+      setState(() {
+        _selectedDate = picked;
+        final fmt = dateOpt?.dateFormat ?? 'dd/MM/yyyy';
+        _controller.text = DateFormat(fmt).format(picked);
+      });
       widget.onDateSelected?.call(picked);
-      _validate(_controller.text);
-      setState(() {});
     }
+  }
+
+  /// Format TimeOfDay to string based on custom format
+  String _formatTimeOfDay(TimeOfDay time, String? format) {
+    if (format == null || format.isEmpty) {
+      // Use system default
+      return time.format(context);
+    }
+
+    // Convert TimeOfDay to DateTime for formatting
+    final now = DateTime.now();
+    final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    return DateFormat(format).format(dt);
+  }
+
+  /// Extract filename from full path
+  /// Example: "/storage/emulated/0/Download/document.pdf" -> "document.pdf"
+  String _getFileName(String path) {
+    return path.split('/').last;
   }
 
   Future<void> _showTimePicker() async {
-    final ctx = context;
     final picked = await showTimePicker(
-      context: ctx,
-      initialTime: _selectedTime ?? TimeOfDay.now(),
+      context: context,
+      initialTime:
+          _selectedTime ??
+          widget.timePickerOptions?.initialTime ??
+          TimeOfDay.now(),
     );
 
-    if (!ctx.mounted) return;
-
-    if (picked != null) {
-      _selectedTime = picked;
-      _controller.text = picked.format(ctx);
+    if (picked != null && mounted) {
+      setState(() {
+        _selectedTime = picked;
+        // Use custom format if provided, otherwise use system format
+        _controller.text = _formatTimeOfDay(
+          picked,
+          widget.timePickerOptions?.timeFormat,
+        );
+      });
       widget.onTimeSelected?.call(picked);
-      _validate(_controller.text);
-      setState(() {});
     }
   }
 
-  void _validate(String? value) {
-    final validator = widget.validator?.validator;
-    if (validator != null) {
-      setState(() => _errorText = validator(value));
-    } else {
-      setState(() => _errorText = null);
+  /// Public method to validate the field programmatically
+  /// Returns true if valid, false if invalid
+  bool validate() {
+    return _buildValidator(_controller.text) == null;
+  }
+
+  /// Public method to clear the field
+  void clear() {
+    if (mounted) {
+      setState(() {
+        _controller.clear();
+        _selectedFile = null;
+        _selectedDate = null;
+        _selectedTime = null;
+      });
     }
   }
+
+  /// Get the current value
+  String get value => _controller.text;
+
+  /// Get selected file (for file picker type)
+  File? get selectedFile => _selectedFile;
+
+  /// Get selected date (for date picker type)
+  DateTime? get selectedDate => _selectedDate;
+
+  /// Get selected time (for time picker type)
+  TimeOfDay? get selectedTime => _selectedTime;
 }
