@@ -65,6 +65,7 @@ class XTextField extends StatefulWidget {
     this.autovalidateMode,
     this.asyncErrorText,
     this.onSaved,
+    this.floatingLabelBehavior = .auto,
   });
 
   final TextEditingController? controller;
@@ -85,6 +86,7 @@ class XTextField extends StatefulWidget {
   final TextInputAction textInputAction;
   final TextInputType inputType;
   final TextCapitalization textCapitalization;
+  final FloatingLabelBehavior floatingLabelBehavior;
   final int minLines;
   final int maxLines;
   final int maxLength;
@@ -349,7 +351,7 @@ class _XTextFieldState extends State<XTextField> {
           contentPadding: widget.contentPadding,
           labelText: widget.labelOnLine,
           labelStyle: widget.labelStyle,
-          floatingLabelBehavior: FloatingLabelBehavior.always,
+          floatingLabelBehavior: widget.floatingLabelBehavior,
           hintText: widget.hintText,
           hintStyle: widget.hintStyle,
           prefixIcon: widget.prefixIcon,

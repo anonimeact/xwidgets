@@ -25,6 +25,7 @@ class XButton extends StatelessWidget {
     this.label,
     this.radius = 5,
     this.style,
+    this.textStyle,
     this.isLoading = false,
     this.isEnable = true,
     this.isForceTap = false,
@@ -68,10 +69,13 @@ class XButton extends StatelessWidget {
   /// Custom style configuration for the button.
   final XButtonStyle? style;
 
+  final TextStyle? textStyle;
+
   @override
   Widget build(BuildContext context) {
     final buttonStyle = style ?? XButtonStyle();
-    final textStyle =
+    final buttonTextStyle =
+        textStyle ??
         buttonStyle.textStyle ??
         TextStyle(
           fontSize: buttonStyle.textSize,
@@ -139,7 +143,7 @@ class XButton extends StatelessWidget {
                           child: buttonStyle.centerIcon!,
                         ),
 
-                      if (label != null) Text(label!, style: textStyle),
+                      if (label != null) Text(label!, style: buttonTextStyle),
 
                       if (child != null) child!,
                     ],

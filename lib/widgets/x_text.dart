@@ -40,6 +40,7 @@ class XText extends StatelessWidget {
     this.maxWidth,
     this.overflow,
     this.textAlign = .start,
+    this.iconSpacer = 8,
   });
 
   final String text;
@@ -48,6 +49,7 @@ class XText extends StatelessWidget {
   final TextStyle? style;
   final TextAlign textAlign;
   final bool? isUseUnderline;
+  final double? iconSpacer;
   final CrossAxisAlignment? iconVerticalAlignment;
   final Function()? onTap;
   final double? maxWidth;
@@ -62,7 +64,13 @@ class XText extends StatelessWidget {
         crossAxisAlignment: iconVerticalAlignment ?? .center,
         children: [
           icon != null
-              ? Row(mainAxisSize: .min, children: [icon!, SizedBox(width: 5)])
+              ? Row(
+                  mainAxisSize: .min,
+                  children: [
+                    icon!,
+                    SizedBox(width: iconSpacer),
+                  ],
+                )
               : SizedBox.shrink(),
           isExpand
               ? Flexible(child: _buildTextContainer())

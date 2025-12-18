@@ -1,3 +1,9 @@
+## 1.0.8
+
+* Add iconSpacer in XText
+* Add floatingLabelBehavior inXTextField
+* Aad option textStyle ourside XButtonStyle 
+
 ## 1.0.7
 
 * Enhance XTextField Widget
