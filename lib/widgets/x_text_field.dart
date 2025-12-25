@@ -66,39 +66,122 @@ class XTextField extends StatefulWidget {
     this.asyncErrorText,
     this.onSaved,
     this.floatingLabelBehavior = .auto,
+    this.cursorColor = Colors.black87,
   });
 
+  /// Controller for managing the text field's value.
+  /// If not provided, an internal controller is created.
   final TextEditingController? controller;
+
+  /// Text style within the field.
   final TextStyle? textStyle;
+
+  /// Label text style displayed above the field.
   final TextStyle? labelStyle;
+
+  /// Hint text style displayed when the field is empty.
   final TextStyle? hintStyle;
+
+  /// Text alignment within the field.
+  /// Defaults to [TextAlign.start].
   final TextAlign textAlign;
+
+  /// Padding inside the text field.
+  /// If null, default padding is applied.
   final EdgeInsets? contentPadding;
+
+  /// Label text style displayed above the field.
   final String? label;
+
+  /// Label text displayed on the same line as the field.
   final String? labelOnLine;
+
+  /// Hint text displayed when the field is empty.
   final String? hintText;
+
+  /// Whether the field is required.
+  /// Defaults to `false`.
   final bool isRequired;
+
+  /// Whether the field is enabled.
+  /// Defaults to `true`.
   final bool isEnable;
+
+  /// Whether the field is read-only.
+  /// Defaults to `false`.
   final bool isReadOnly;
+
+  /// Type of field to display.
+  /// Defaults to [XTextFieldType.normal].
   final XTextFieldType fieldType;
+
+  /// Prefix icon widget.
+  /// For file picker, dropdown, date picker, and time picker types,
+  /// it's recommended to use an [IconButton] to trigger the respective action.
   final Widget? prefixIcon;
+
+  /// Suffix icon widget.
+  /// For file picker, dropdown, date picker, and time picker types,
+  /// it's recommended to use an [IconButton] to trigger the respective action.
   final Widget? suffixIcon;
+
+  /// Action button on the keyboard.
+  /// Defaults to `TextInputAction.next`.
   final TextInputAction textInputAction;
+
+  /// Type of keyboard to use for text input.
+  /// Defaults to `TextInputType.text`.
   final TextInputType inputType;
+
+  /// Text capitalization behavior.
+  /// Defaults to `TextCapitalization.sentences`.
   final TextCapitalization textCapitalization;
+
+  /// Behavior of the floating label.
+  /// Defaults to `FloatingLabelBehavior.auto`.
   final FloatingLabelBehavior floatingLabelBehavior;
+
+  /// Minimum lines of input.
   final int minLines;
+
+  /// Minimum lines of input.
   final int maxLines;
+
+  /// Maximum length of input text.
   final int maxLength;
+
+  /// Whether to show character counter below the field.
+  /// Defaults to `false`.
   final bool isShowCounter;
+
+  /// Whether to obscure the text (for password fields).
   final bool isObscureText;
+
+  /// Callback when the field value changes.
   final void Function(String)? onChanged;
+
+  /// Callback when the field is tapped.
   final VoidCallback? onTap;
+
+  /// Style customization for the text field.
+  /// If null, default styles are applied.
   final XTextFieldStyle? style;
+
+  /// Options for file picker field.
   final XTextFieldFileOptions? fileOptions;
+
+  /// Options for dropdown field.
   final XTextFieldDropdownOptions? dropdownOptions;
+
+  /// Options for date picker field.
   final XTextFieldDatePickerOptions? datePickerOptions;
+
+  /// Options for time picker field.
   final XTextFieldTimePickerOptions? timePickerOptions;
+
+  /// Color of the text cursor.
+  /// Defaults to `Colors.black87`.
+  final Color? cursorColor;
 
   /// Field validator - accepts standard Flutter validator function
   /// Use XFormValidator for common validations:
@@ -347,6 +430,7 @@ class _XTextFieldState extends State<XTextField> {
         maxLines: widget.maxLines,
         maxLength: widget.maxLength,
         autovalidateMode: widget.autovalidateMode ?? AutovalidateMode.disabled,
+        cursorColor: widget.cursorColor,
         decoration: InputDecoration(
           contentPadding: widget.contentPadding,
           labelText: widget.labelOnLine,

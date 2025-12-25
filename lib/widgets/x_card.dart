@@ -55,9 +55,21 @@ class XCard extends StatelessWidget {
   /// If null, defaults to `0.7`.
   final double? blurRadius;
 
+  /// Width of the card.
   final double? width;
+
+  /// Height of the card.
   final double? height;
+
+  /// Alignment of the child within the card.
   final AlignmentGeometry? alignment;
+
+  /// Callback when the card is tapped.
+  final VoidCallback? onTap;
+
+  /// Whether to enable ripple effect on tap.
+  /// Defaults to `false`.
+  final bool enableRipple;
 
   /// Creates an [XCard] with customizable styling options.
   const XCard({
@@ -72,31 +84,42 @@ class XCard extends StatelessWidget {
     this.width,
     this.height,
     this.alignment,
+    this.onTap,
+    this.enableRipple = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Container(
-        width: width ?? double.infinity,
-        height: height,
-        margin: margin,
-        padding: padding,
-        alignment: alignment,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(radius),
-          color: background ?? Theme.of(context).canvasColor,
-          boxShadow: [
-            BoxShadow(
-              color: shadowColor ?? Colors.grey.withAlpha(100),
-              spreadRadius: blurRadius ?? .7,
-              blurRadius: blurRadius ?? .7,
-              offset: Offset(0, blurRadius ?? .7),
-            ),
-          ],
+    return InkWell(
+      onTap: onTap,
+      splashColor: enableRipple == true
+          ? Theme.of(context).primaryColor.withAlpha(50)
+          : Colors.transparent,
+      highlightColor: enableRipple == true
+          ? Theme.of(context).highlightColor
+          : Colors.transparent,
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          width: width ?? double.infinity,
+          height: height,
+          margin: margin,
+          padding: padding,
+          alignment: alignment,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(radius),
+            color: background ?? Theme.of(context).canvasColor,
+            boxShadow: [
+              BoxShadow(
+                color: shadowColor ?? Colors.grey.withAlpha(100),
+                spreadRadius: blurRadius ?? .7,
+                blurRadius: blurRadius ?? .7,
+                offset: Offset(0, blurRadius ?? .7),
+              ),
+            ],
+          ),
+          child: child,
         ),
-        child: child,
       ),
     );
   }

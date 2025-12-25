@@ -1,3 +1,8 @@
+## 1.0.9
+
+* Add option cursorColor in XTextField
+* Add on tap action on XCard
+
 ## 1.0.8
 
 * Add iconSpacer in XText
