@@ -254,7 +254,8 @@ class XSnackbarType {
   const XSnackbarType.info() : color = null;
 
   /// Success snackbar (green).
-  const XSnackbarType.success() : color = Colors.green;
+  const XSnackbarType.success()
+    : color = const Color.fromARGB(255, 47, 160, 94);
 
   /// Error snackbar (red).
   const XSnackbarType.error() : color = Colors.redAccent;

@@ -10,6 +10,7 @@ abstract class XButtonStyle with _$XButtonStyle {
     @Default(Colors.white) Color foreground,
     @Default(Colors.white) Color borderColor,
     @Default(Colors.lightBlue) Color loadingColor,
+    @Default(2.0) double loadingStrokeWidth,
     @Default(Color.fromRGBO(238, 238, 238, 1)) Color disableBackground,
     @Default(0.0) double borderWidth,
     @Default(true) bool isEnable,

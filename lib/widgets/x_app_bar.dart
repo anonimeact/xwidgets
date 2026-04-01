@@ -28,11 +28,38 @@ class XAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? child;
   final TextStyle? titleTextStyle;
   final VoidCallback? onTapBack;
-  final List<Widget> actions;
+  final List<Widget>? actions;
   final bool isTitleCenter;
   final double? toolbarHeight;
   final Color? backgroundColor;
   final Widget? backButton;
+  final Widget? leading;
+  final bool automaticallyImplyLeading;
+  final bool automaticallyImplyActions;
+  final Widget? flexibleSpace;
+  final PreferredSizeWidget? bottom;
+  final double? elevation;
+  final double? scrolledUnderElevation;
+  final ScrollNotificationPredicate notificationPredicate;
+  final Color? shadowColor;
+  final Color? surfaceTintColor;
+  final ShapeBorder? shape;
+  final Color? foregroundColor;
+  final IconThemeData? iconTheme;
+  final IconThemeData? actionsIconTheme;
+  final bool primary;
+  final bool excludeHeaderSemantics;
+  final double? titleSpacing;
+  final double toolbarOpacity;
+  final double bottomOpacity;
+  final double? leadingWidth;
+  final TextStyle? toolbarTextStyle;
+  final SystemUiOverlayStyle? systemOverlayStyle;
+  final bool forceMaterialTransparency;
+  final bool useDefaultSemanticsOrder;
+  final Clip? clipBehavior;
+  final EdgeInsetsGeometry? actionsPadding;
+  final bool animateColor;
 
   const XAppBar({
     super.key,
@@ -40,11 +67,38 @@ class XAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.child,
     this.titleTextStyle,
     this.onTapBack,
-    this.actions = const [],
+    this.actions,
     this.isTitleCenter = true,
     this.toolbarHeight,
     this.backgroundColor,
     this.backButton,
+    this.leading,
+    this.automaticallyImplyLeading = true,
+    this.automaticallyImplyActions = true,
+    this.flexibleSpace,
+    this.bottom,
+    this.elevation,
+    this.scrolledUnderElevation,
+    this.notificationPredicate = defaultScrollNotificationPredicate,
+    this.shadowColor,
+    this.surfaceTintColor,
+    this.shape,
+    this.foregroundColor,
+    this.iconTheme,
+    this.actionsIconTheme,
+    this.primary = true,
+    this.excludeHeaderSemantics = false,
+    this.titleSpacing,
+    this.toolbarOpacity = 1.0,
+    this.bottomOpacity = 1.0,
+    this.leadingWidth,
+    this.toolbarTextStyle,
+    this.systemOverlayStyle,
+    this.forceMaterialTransparency = false,
+    this.useDefaultSemanticsOrder = true,
+    this.clipBehavior,
+    this.actionsPadding,
+    this.animateColor = false,
   });
 
   @override
@@ -53,26 +107,9 @@ class XAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     final bool isDarkBackground = bgColor.computeLuminance() < 0.5;
 
-    return AppBar(
-      titleSpacing: 0,
-      toolbarHeight: toolbarHeight,
-      backgroundColor: bgColor,
-      centerTitle: isTitleCenter,
-      actions: actions,
-      systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: bgColor,
-        statusBarIconBrightness: isDarkBackground
-            ? Brightness.light
-            : Brightness.dark,
-        statusBarBrightness: isDarkBackground
-            ? Brightness.dark
-            : Brightness.light,
-      ),
-
-      /// Leading logic:
-      /// - If `backButton` provided → wrap it with GestureDetector for consistent callback.
-      /// - Else → default IconButton back arrow.
-      leading: backButton != null
+    Widget? effectiveLeading = leading;
+    if (effectiveLeading == null && (backButton != null || onTapBack != null)) {
+      effectiveLeading = backButton != null
           ? GestureDetector(
               onTap: onTapBack ?? () => Navigator.pop(context),
               behavior: HitTestBehavior.opaque,
@@ -81,19 +118,64 @@ class XAppBar extends StatelessWidget implements PreferredSizeWidget {
           : IconButton(
               icon: const Icon(Icons.arrow_back_outlined),
               onPressed: onTapBack ?? () => Navigator.pop(context),
-            ),
+            );
+    }
+
+    return AppBar(
+      leading: effectiveLeading,
+      automaticallyImplyLeading: automaticallyImplyLeading,
+      automaticallyImplyActions: automaticallyImplyActions,
+      titleSpacing: titleSpacing ?? 0,
+      toolbarHeight: toolbarHeight,
+      leadingWidth: leadingWidth,
+      backgroundColor: bgColor,
+      foregroundColor: foregroundColor,
+      flexibleSpace: flexibleSpace,
+      bottom: bottom,
+      elevation: elevation,
+      scrolledUnderElevation: scrolledUnderElevation,
+      notificationPredicate: notificationPredicate,
+      shadowColor: shadowColor,
+      surfaceTintColor: surfaceTintColor,
+      shape: shape,
+      iconTheme: iconTheme,
+      actionsIconTheme: actionsIconTheme,
+      primary: primary,
+      centerTitle: isTitleCenter,
+      actions: actions,
+      excludeHeaderSemantics: excludeHeaderSemantics,
+      toolbarOpacity: toolbarOpacity,
+      bottomOpacity: bottomOpacity,
+      toolbarTextStyle: toolbarTextStyle,
+      titleTextStyle: titleTextStyle,
+      systemOverlayStyle:
+          systemOverlayStyle ??
+          SystemUiOverlayStyle(
+            statusBarColor: bgColor,
+            statusBarIconBrightness: isDarkBackground
+                ? Brightness.light
+                : Brightness.dark,
+            statusBarBrightness: isDarkBackground
+                ? Brightness.dark
+                : Brightness.light,
+          ),
+      forceMaterialTransparency: forceMaterialTransparency,
+      useDefaultSemanticsOrder: useDefaultSemanticsOrder,
+      clipBehavior: clipBehavior,
+      actionsPadding: actionsPadding,
+      animateColor: animateColor,
 
       title:
           child ??
           Text(
             title ?? '',
-            style:
-                titleTextStyle ??
-                const TextStyle(fontSize: 18, color: Colors.white),
+            style: titleTextStyle ?? const TextStyle(fontSize: 18),
           ),
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(toolbarHeight ?? kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(
+    (toolbarHeight ?? kToolbarHeight) + (bottom?.preferredSize.height ?? 0),
+  );
 }

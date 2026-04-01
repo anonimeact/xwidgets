@@ -1,38 +1,22 @@
 # XWidgets Pack
 
-XWidgets is a Flutter package that provides a curated set of reusable,
-customizable UI widgets to accelerate app development and improve
-consistency across projects. The library focuses on lightweight, well-documented
-components that are easy to style and compose.
+XWidgets is a Flutter package that provides reusable, customizable UI widgets for faster app development and consistent UI patterns.
 
 ![Example](xwidgets.jpeg)
 
 ## Features
 
-- **XAppBar** — A configurable app bar with title, subtitle, leading and action
-  slots. Supports quick theming and layout variants.
-- **XButton** — Flexible button supporting primary/secondary variants, icons,
-  loading states and custom styles.
-- **XCard** — Styled card wrapper with padding, elevation and corner options.
-- **XDiagonalStrikethroughText** — Text widget that renders a diagonal
-  strikethrough for decorative or sale UI.
-- **XDoubleDashedLine** — Two parallel dashed lines for decorative dividers.
-- **XSingleDashedLine** — Single dashed divider with spacing and stroke options.
-- **XSnackbar** — Convenience wrapper to show stylable snackbars with actions.
-- **XSpacer** — Utility widget to insert flexible space between widgets.
-- **XTextField** — Enhanced text field with validation hooks and prefined styles.
-- **XText** — Convenience text widget consolidating common text styles.
-- **XShimmer** - Wrapper widget that provides a smooth shimmer animation effect, commonly used for loading placeholders.
+- `XAppBar`: configurable wrapper around `AppBar` with native passthrough params.
+- `XButton`: flexible button with external/inside loading, style control, and native `ElevatedButton` passthrough params.
+- `XTextField`: enhanced field (normal, file, dropdown, date, time) with broad `TextFormField` passthrough params.
+- `XText`: text widget with icon support, optional underline, and native `Text` passthrough params.
+- `XCard`, `XSnackbar`, `XShimmer`, `XSpacer`, `XSingleDashedLine`, `XDoubleDashedLine`, `XDiagonalStrikethroughText`.
 
 ## Installation
 
-Add `xwidgets` to your `pubspec.yaml` dependencies:
-
-Or if published on pub.dev, use the latest version:
-
 ```yaml
 dependencies:
-  xwidgets: ^latest
+  xwidgets_pack: ^1.1.0
 ```
 
 Then run:
@@ -43,130 +27,86 @@ flutter pub get
 
 ## Usage
 
-Import the package and use widgets directly:
+```dart
+import 'package:xwidgets_pack/xwidgets.dart';
+```
+
+### XButton
 
 ```dart
-XText(
-  'X Text Example',
-  icon: Icon(Icons.android),
-  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-),
-
-XText(
-  'Long Text Example Long Text Example Long Text Example Long Text Example Long Text Example Long Text Example',
-  iconVerticalAlignment: .start,
-  isExpand: true,
-  icon: Icon(Icons.android),
-  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 18),
-),
-
-// Make a static gap / spacer widget
-XSpacer(height: 8),
-XHeight(8),
-XWidth(8),
-
-XSingleDashedLine(),
-
-XDiagonalStrikethroughText(
-  'DICORET',
-  diagonalType: .bottomTop,
-  lineColor: Colors.red,
-  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-),
-
-XDoubleDashedLine(),
-
 XButton(
-  isLoading: isLoadingButtonTitle,
-  onPressed: () async {
-    setState(() => isLoadingButtonTitle = true);
-    await showXButtonActionTitle();
-    setState(() => isLoadingButtonTitle = false);
-  },
-  label: 'XButton with Title',
-),
-
-XButton(
-  height: 56,
-  isLoading: isLoadingButtonCustom,
-  onPressed: () async {
-    setState(() => isLoadingButtonCustom = true);
-    await showXButtonActionCustom();
-    setState(() => isLoadingButtonCustom = false);
-  },
-  child: Column(
-    mainAxisAlignment: .center,
-    children: [
-      XText('On Press', style: TextStyle(fontSize: 11), icon: Icon(Icons.ads_click_rounded)),
-      Text('XButton Custom View'),
-    ],
+  label: 'Submit',
+  isLoading: isSubmitting,
+  isLoadingInside: true, // keep button width while loading
+  onPressed: () async {},
+  style: XButtonStyle(
+    loadingColor: Colors.white,
+    loadingStrokeWidth: 2.5,
   ),
-),
-
-XShimmer(
-  isLoading: isLoadingShimmerCustom,
-  shimmerChild: Column(
-    children: [
-      XShimmerChild(width: 100, height: 45),
-      XSpacer(height: 10),
-      XShimmerChild(width: 100, height: 45),
-    ],
+  elevatedButtonStyle: ElevatedButton.styleFrom(
+    backgroundColor: Colors.blue,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
   ),
-  child: Container(width: 100, height: 100, alignment: .center, child: Text('HelloWord')),
-),
-
-XButton(
-  height: 56,
-  isLoading: isLoadingShimmerCustom,
-  onPressed: () async {
-    setState(() => isLoadingShimmerCustom = true);
-    await Future.delayed(Duration(seconds: 2));
-    setState(() => isLoadingShimmerCustom = false);
-  },
-  child: Text('XShimmer Loading View'),
-)
-
-XTextField(labelOnLine: 'Nama', hintText: 'Siapa namamu?'),
-
-XTextField(label: 'Date Picker', fieldType: .datepicker, suffixIcon: Icon(Icons.calendar_month_outlined)),
-
-XTextField(
-  labelOnLine: 'Date Time labelOnLine',
-  fieldType: .timepicker,
-  suffixIcon: Icon(Icons.timelapse_outlined)
-),
-
-XTextField(label: 'File Picker', isRequired: true, fieldType: .file)
-
-XTextField(
-  label: 'Date Time labelOnLine',
-  dropdownOptions: XTextFieldDropdownOptions(
-    items: ["Sumatera", 'Jawa', 'Kalimantan'],
-    itemAsString: (item) => item,
-  ),
-  fieldType: .dropdown,
-)
-
-/// XSnackbar
-/// you need init navigatorKey when run the app
-///
-/// MaterialApp(
-///   navigatorKey: XSnackbar.navigatorKey,
-///   home: MyApp(),
-/// )
-
-XSnackbar.warning(
-  'XButton Pressed',
-  position: .top,
-  title: 'Title',
-  config: XSnackbarConfig(
-    radius: 0,
-    leadingIcon: Icon(Icons.ac_unit_sharp, color: Colors.white),
-    actionLabel: 'Tutup',
-    margin: EdgeInsets.zero,
-  ),
-  onAction: () => debugPrint('Action Tapped'),
+  onLongPress: () {},
 );
 ```
 
-See the `example/` folder for more complete demos.
+### XTextField
+
+```dart
+XTextField(
+  labelOnLine: 'Email',
+  hintText: 'your@email.com',
+  keyboardAppearance: Brightness.dark,
+  inputFormatters: [
+    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+  ],
+  textInputAction: TextInputAction.done,
+  maxLengthEnforcement: MaxLengthEnforcement.enforced,
+  decoration: const InputDecoration(
+    prefixIcon: Icon(Icons.email_outlined),
+  ),
+  onFieldSubmitted: (value) {},
+  validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+);
+```
+
+### XAppBar
+
+```dart
+Scaffold(
+  appBar: XAppBar(
+    title: 'Dashboard',
+    actions: [
+      IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+    ],
+    elevation: 2,
+    isTitleCenter: true,
+    systemOverlayStyle: SystemUiOverlayStyle.light,
+    bottom: const PreferredSize(
+      preferredSize: Size.fromHeight(4),
+      child: Divider(height: 1),
+    ),
+  ),
+);
+```
+
+### XText
+
+```dart
+XText(
+  'Example text',
+  icon: const Icon(Icons.info_outline, size: 16),
+  isUseUnderline: true,
+  maxLines: 2,
+  overflow: TextOverflow.ellipsis,
+  textScaler: const TextScaler.linear(1.0),
+  semanticsLabel: 'Example text',
+  onTap: () {},
+  onLongPress: () {},
+);
+```
+
+See the `example/` folder for complete demos.

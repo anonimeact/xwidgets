@@ -22,11 +22,20 @@ class XButton extends StatelessWidget {
   const XButton({
     super.key,
     required this.onPressed,
+    this.onLongPress,
+    this.onHover,
+    this.onFocusChange,
     this.label,
     this.radius = 5,
     this.style,
+    this.elevatedButtonStyle,
+    this.focusNode,
+    this.autofocus = false,
+    this.clipBehavior,
+    this.statesController,
     this.textStyle,
     this.isLoading = false,
+    this.isLoadingInside = false,
     this.isEnable = true,
     this.isForceTap = false,
     this.child,
@@ -38,6 +47,15 @@ class XButton extends StatelessWidget {
   /// Called when the button is tapped.
   final Function onPressed;
 
+  /// Called when the button is long-pressed.
+  final VoidCallback? onLongPress;
+
+  /// Called when a pointer enters or exits the button.
+  final ValueChanged<bool>? onHover;
+
+  /// Called when the button gains or loses focus.
+  final ValueChanged<bool>? onFocusChange;
+
   /// Text label displayed on the button.
   final String? label;
 
@@ -46,6 +64,9 @@ class XButton extends StatelessWidget {
 
   /// Whether to show a loading indicator instead of the button.
   final bool isLoading;
+
+  /// Whether to show loading indicator inside [ElevatedButton].
+  final bool isLoadingInside;
 
   /// Controls whether the button is enabled.
   ///
@@ -69,6 +90,23 @@ class XButton extends StatelessWidget {
   /// Custom style configuration for the button.
   final XButtonStyle? style;
 
+  /// Native [ButtonStyle] for [ElevatedButton].
+  ///
+  /// If provided, it will be merged on top of [XButton] default style.
+  final ButtonStyle? elevatedButtonStyle;
+
+  /// Optional focus node for [ElevatedButton].
+  final FocusNode? focusNode;
+
+  /// Whether this button should be focused initially.
+  final bool autofocus;
+
+  /// The clipping behavior of the button's content.
+  final Clip? clipBehavior;
+
+  /// Optional states controller for [ElevatedButton].
+  final WidgetStatesController? statesController;
+
   final TextStyle? textStyle;
 
   @override
@@ -81,19 +119,76 @@ class XButton extends StatelessWidget {
           fontSize: buttonStyle.textSize,
           color: buttonStyle.foreground,
         );
+    final buttonContent = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Prefix Icon
+        buttonStyle.prefixIcon != null
+            ? Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: buttonStyle.prefixIcon!,
+                ),
+              )
+            : const SizedBox.shrink(),
+
+        // Center Content
+        Row(
+          mainAxisAlignment: .center,
+          mainAxisSize: .min,
+          children: [
+            if (buttonStyle.centerIcon != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: buttonStyle.centerIcon!,
+              ),
+
+            if (label != null) Text(label!, style: buttonTextStyle),
+
+            if (child != null) child!,
+          ],
+        ),
+
+        // Suffix Icon
+        buttonStyle.suffixIcon != null
+            ? Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: buttonStyle.suffixIcon!,
+                ),
+              )
+            : const SizedBox.shrink(),
+      ],
+    );
+    final mergedElevatedStyle = styleButtonRounded(
+      radius: radius,
+      background: isEnable
+          ? buttonStyle.background
+          : buttonStyle.disableBackground,
+      foreground: buttonStyle.foreground,
+      borderColor: buttonStyle.borderColor,
+      isEnable: buttonStyle.isEnable,
+      borderWidth: buttonStyle.borderWidth,
+      elevation: buttonStyle.elevation,
+      paddingHorizontal: buttonStyle.paddingHorizontal,
+      paddingVertical: buttonStyle.paddingVertical,
+    ).merge(elevatedButtonStyle);
 
     return SizedBox(
       height: height ?? 48,
       width: widthInfinity ? double.infinity : width,
       child:
-          isLoading // Show loading indicator instead of button.
+          isLoading &&
+              !isLoadingInside // Show loading indicator instead of button.
           ? Center(
               child: SizedBox(
                 width: 25,
                 height: 25,
                 child: CircularProgressIndicator(
                   color: buttonStyle.loadingColor,
-                  strokeWidth: 2,
+                  strokeWidth: buttonStyle.loadingStrokeWidth,
                 ),
               ),
             )
@@ -105,62 +200,30 @@ class XButton extends StatelessWidget {
                     ? onPressed()
                     : null;
               },
-              style: styleButtonRounded(
-                radius: radius,
-                background: isEnable
-                    ? buttonStyle.background
-                    : buttonStyle.disableBackground,
-                foreground: buttonStyle.foreground,
-                borderColor: buttonStyle.borderColor,
-                isEnable: buttonStyle.isEnable,
-                borderWidth: buttonStyle.borderWidth,
-                elevation: buttonStyle.elevation,
-                paddingHorizontal: buttonStyle.paddingHorizontal,
-                paddingVertical: buttonStyle.paddingVertical,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Prefix Icon
-                  buttonStyle.prefixIcon != null
-                      ? Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: buttonStyle.prefixIcon!,
+              onLongPress: onLongPress,
+              onHover: onHover,
+              onFocusChange: onFocusChange,
+              focusNode: focusNode,
+              autofocus: autofocus,
+              clipBehavior: clipBehavior ?? Clip.none,
+              statesController: statesController,
+              style: mergedElevatedStyle,
+              child: isLoading && isLoadingInside
+                  ? Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Opacity(opacity: 0, child: buttonContent),
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: buttonStyle.loadingColor,
+                            strokeWidth: buttonStyle.loadingStrokeWidth,
                           ),
-                        )
-                      : const SizedBox.shrink(),
-
-                  // Center Content
-                  Row(
-                    mainAxisAlignment: .center,
-                    mainAxisSize: .min,
-                    children: [
-                      if (buttonStyle.centerIcon != null)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: buttonStyle.centerIcon!,
                         ),
-
-                      if (label != null) Text(label!, style: buttonTextStyle),
-
-                      if (child != null) child!,
-                    ],
-                  ),
-
-                  // Suffix Icon
-                  buttonStyle.suffixIcon != null
-                      ? Align(
-                          alignment: Alignment.centerRight,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: buttonStyle.suffixIcon!,
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                ],
-              ),
+                      ],
+                    )
+                  : buttonContent,
             ),
     );
   }

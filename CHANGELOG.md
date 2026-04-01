@@ -1,3 +1,12 @@
+## 1.1.0
+
+* Enhance `XButton` with `isLoadingInside` and preserved button width while loading.
+* Add `loadingStrokeWidth` in `XButtonStyle` and apply `loadingColor` + `loadingStrokeWidth` to all button loaders.
+* Add more native `ElevatedButton` passthrough options in `XButton` (`onLongPress`, `onHover`, `onFocusChange`, `focusNode`, `autofocus`, `clipBehavior`, `statesController`, `elevatedButtonStyle`).
+* Enhance `XTextField` with broader `TextFormField` passthrough parameters for full customization.
+* Enhance `XAppBar` with broader native `AppBar` passthrough parameters and `preferredSize` support for `bottom`.
+* Enhance `XText` with broader native `Text` and gesture passthrough parameters.
+
 ## 1.0.9
 
 * Add option cursorColor in XTextField

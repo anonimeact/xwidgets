@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:xwidgets_pack/models/x_button_style.dart';
 import 'package:xwidgets_pack/models/x_snackbar_config.dart';
 import 'package:xwidgets_pack/utils/x_form_validators.dart';
 import 'package:xwidgets_pack/utils/x_textfield_options.dart';
@@ -17,6 +18,7 @@ class ExampleXwidgets extends StatefulWidget {
 
 class _ExampleXwidgetsState extends State<ExampleXwidgets> {
   var isLoadingButtonTitle = false;
+  var isLoadingInsideButton = false;
   var isLoadingButtonCustom = false;
   var isLoadingShimmerCustom = false;
 
@@ -66,6 +68,24 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
                   setState(() => isLoadingButtonTitle = false);
                 },
                 label: 'XButton with Title',
+              ),
+              XSpacer(height: 8),
+              XButton(
+                isLoading: isLoadingInsideButton,
+                isLoadingInside: true,
+                onPressed: () async {
+                  setState(() => isLoadingInsideButton = true);
+                  await Future.delayed(Duration(seconds: 2));
+                  setState(() => isLoadingInsideButton = false);
+                },
+                style: XButtonStyle(
+                  background: Colors.green,
+                  foreground: Colors.white,
+                  borderColor: Colors.greenAccent,
+                  loadingColor: Colors.white,
+                  textSize: 16,
+                ),
+                label: 'XButton Loading Inside',
               ),
               XSpacer(height: 8),
               XButton(

@@ -1,4 +1,7 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 
 /// A customizable text widget that supports an optional leading icon,
 /// underline decoration, tap handling, width limitation, and overflow control.
@@ -41,6 +44,25 @@ class XText extends StatelessWidget {
     this.overflow,
     this.textAlign = .start,
     this.iconSpacer = 8,
+    this.strutStyle,
+    this.textDirection,
+    this.locale,
+    this.softWrap = true,
+    this.maxLines,
+    this.textScaler,
+    this.semanticsLabel,
+    this.semanticsIdentifier,
+    this.textWidthBasis,
+    this.textHeightBehavior,
+    this.selectionColor,
+    this.onDoubleTap,
+    this.onLongPress,
+    this.onTapDown,
+    this.onTapUp,
+    this.onTapCancel,
+    this.behavior,
+    this.excludeFromSemantics = false,
+    this.dragStartBehavior = DragStartBehavior.start,
   });
 
   final String text;
@@ -54,11 +76,38 @@ class XText extends StatelessWidget {
   final Function()? onTap;
   final double? maxWidth;
   final TextOverflow? overflow;
+  final StrutStyle? strutStyle;
+  final TextDirection? textDirection;
+  final Locale? locale;
+  final bool? softWrap;
+  final int? maxLines;
+  final TextScaler? textScaler;
+  final String? semanticsLabel;
+  final String? semanticsIdentifier;
+  final TextWidthBasis? textWidthBasis;
+  final ui.TextHeightBehavior? textHeightBehavior;
+  final Color? selectionColor;
+  final GestureTapCallback? onDoubleTap;
+  final GestureLongPressCallback? onLongPress;
+  final GestureTapDownCallback? onTapDown;
+  final GestureTapUpCallback? onTapUp;
+  final GestureTapCancelCallback? onTapCancel;
+  final HitTestBehavior? behavior;
+  final bool excludeFromSemantics;
+  final DragStartBehavior dragStartBehavior;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      onDoubleTap: onDoubleTap,
+      onLongPress: onLongPress,
+      onTapDown: onTapDown,
+      onTapUp: onTapUp,
+      onTapCancel: onTapCancel,
+      behavior: behavior,
+      excludeFromSemantics: excludeFromSemantics,
+      dragStartBehavior: dragStartBehavior,
       child: Row(
         mainAxisSize: isExpand ? .max : .min,
         crossAxisAlignment: iconVerticalAlignment ?? .center,
@@ -81,6 +130,10 @@ class XText extends StatelessWidget {
   }
 
   Widget _buildTextContainer() {
+    final textStyle = isUseUnderline == true
+        ? style?.copyWith(decoration: TextDecoration.none)
+        : style;
+
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
       child: Container(
@@ -97,10 +150,20 @@ class XText extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 1),
         child: Text(
           text,
-          softWrap: true,
+          softWrap: softWrap,
           overflow: overflow,
-          style: style?.copyWith(decoration: TextDecoration.none),
+          style: textStyle,
           textAlign: textAlign,
+          strutStyle: strutStyle,
+          textDirection: textDirection,
+          locale: locale,
+          textScaler: textScaler,
+          maxLines: maxLines,
+          semanticsLabel: semanticsLabel,
+          semanticsIdentifier: semanticsIdentifier,
+          textWidthBasis: textWidthBasis,
+          textHeightBehavior: textHeightBehavior,
+          selectionColor: selectionColor,
         ),
       ),
     );

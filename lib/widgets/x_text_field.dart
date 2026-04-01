@@ -1,7 +1,11 @@
+import 'dart:ui' as ui show BoxHeightStyle, BoxWidthStyle;
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
@@ -27,8 +31,15 @@ class XTextField extends StatefulWidget {
   /// Creates a new customizable [XTextField].
   const XTextField({
     super.key,
+    this.groupId = EditableText,
+    this.restorationId,
     this.controller,
+    this.focusNode,
+    this.decoration,
     this.textStyle,
+    this.strutStyle,
+    this.textDirection,
+    this.textAlignVertical,
     this.labelStyle,
     this.hintStyle,
     this.label,
@@ -47,6 +58,11 @@ class XTextField extends StatefulWidget {
     this.isShowCounter = false,
     this.onChanged,
     this.onTap,
+    this.onTapAlwaysCalled = false,
+    this.onTapOutside,
+    this.onTapUpOutside,
+    this.onEditingComplete,
+    this.onFieldSubmitted,
     this.textInputAction = TextInputAction.next,
     this.style,
     this.fileOptions,
@@ -66,15 +82,79 @@ class XTextField extends StatefulWidget {
     this.asyncErrorText,
     this.onSaved,
     this.floatingLabelBehavior = .auto,
+    this.autofocus = false,
+    this.showCursor,
+    this.obscuringCharacter = '•',
+    this.autocorrect = true,
+    this.smartDashesType,
+    this.smartQuotesType,
+    this.enableSuggestions = true,
+    this.maxLengthEnforcement,
+    this.expands = false,
+    this.inputFormatters,
+    this.enabled,
+    this.ignorePointers,
+    this.cursorWidth = 2.0,
+    this.cursorHeight,
+    this.cursorRadius,
     this.cursorColor = Colors.black87,
+    this.cursorErrorColor,
+    this.keyboardAppearance,
+    this.scrollPadding = const EdgeInsets.all(20.0),
+    this.enableInteractiveSelection,
+    this.selectAllOnFocus,
+    this.selectionControls,
+    this.buildCounter,
+    this.scrollPhysics,
+    this.autofillHints,
+    this.scrollController,
+    this.enableIMEPersonalizedLearning = true,
+    this.mouseCursor,
+    this.contextMenuBuilder,
+    this.spellCheckConfiguration,
+    this.magnifierConfiguration,
+    this.undoController,
+    this.onAppPrivateCommand,
+    this.cursorOpacityAnimates,
+    this.selectionHeightStyle,
+    this.selectionWidthStyle,
+    this.dragStartBehavior = DragStartBehavior.start,
+    this.contentInsertionConfiguration,
+    this.statesController,
+    this.clipBehavior = Clip.hardEdge,
+    this.stylusHandwritingEnabled =
+        EditableText.defaultStylusHandwritingEnabled,
+    this.canRequestFocus = true,
+    this.hintLocales,
   });
+
+  /// Identifier used by [EditableText] to group text fields for shared behavior.
+  final Object groupId;
+
+  /// Restoration ID for state restoration.
+  final String? restorationId;
 
   /// Controller for managing the text field's value.
   /// If not provided, an internal controller is created.
   final TextEditingController? controller;
 
+  /// Focus node for controlling focus state.
+  final FocusNode? focusNode;
+
+  /// Full [InputDecoration] override for [TextFormField].
+  final InputDecoration? decoration;
+
   /// Text style within the field.
   final TextStyle? textStyle;
+
+  /// Strut style for vertical text metrics.
+  final StrutStyle? strutStyle;
+
+  /// Text direction.
+  final TextDirection? textDirection;
+
+  /// Vertical alignment for text.
+  final TextAlignVertical? textAlignVertical;
 
   /// Label text style displayed above the field.
   final TextStyle? labelStyle;
@@ -163,6 +243,21 @@ class XTextField extends StatefulWidget {
   /// Callback when the field is tapped.
   final VoidCallback? onTap;
 
+  /// Whether to call [onTap] for each tap even when focused.
+  final bool onTapAlwaysCalled;
+
+  /// Callback when tapped outside of this text field.
+  final TapRegionCallback? onTapOutside;
+
+  /// Callback when tap-up happens outside of this text field.
+  final TapRegionUpCallback? onTapUpOutside;
+
+  /// Callback for editing completion.
+  final VoidCallback? onEditingComplete;
+
+  /// Callback when user submits text from keyboard action.
+  final ValueChanged<String>? onFieldSubmitted;
+
   /// Style customization for the text field.
   /// If null, default styles are applied.
   final XTextFieldStyle? style;
@@ -210,6 +305,133 @@ class XTextField extends StatefulWidget {
   /// - [AutovalidateMode.onUserInteraction]: Validate after first user interaction
   final AutovalidateMode? autovalidateMode;
 
+  /// Whether this field should be focused initially.
+  final bool autofocus;
+
+  /// Whether to show cursor.
+  final bool? showCursor;
+
+  /// Character used for obscured text.
+  final String obscuringCharacter;
+
+  /// Whether to enable autocorrect.
+  final bool autocorrect;
+
+  /// Smart dashes behavior.
+  final SmartDashesType? smartDashesType;
+
+  /// Smart quotes behavior.
+  final SmartQuotesType? smartQuotesType;
+
+  /// Whether to enable suggestions.
+  final bool enableSuggestions;
+
+  /// Max length enforcement behavior.
+  final MaxLengthEnforcement? maxLengthEnforcement;
+
+  /// Whether this field expands to fill available space.
+  final bool expands;
+
+  /// Text input formatters.
+  final List<TextInputFormatter>? inputFormatters;
+
+  /// Optional direct enabled override.
+  final bool? enabled;
+
+  /// Whether to ignore pointers.
+  final bool? ignorePointers;
+
+  /// Width of cursor.
+  final double cursorWidth;
+
+  /// Height of cursor.
+  final double? cursorHeight;
+
+  /// Radius for cursor corners.
+  final Radius? cursorRadius;
+
+  /// Cursor error color.
+  final Color? cursorErrorColor;
+
+  /// Keyboard appearance brightness.
+  final Brightness? keyboardAppearance;
+
+  /// Scroll padding around editable region.
+  final EdgeInsets scrollPadding;
+
+  /// Whether interactive selection is enabled.
+  final bool? enableInteractiveSelection;
+
+  /// Whether to select all text on focus.
+  final bool? selectAllOnFocus;
+
+  /// Text selection controls.
+  final TextSelectionControls? selectionControls;
+
+  /// Custom max length counter builder.
+  final InputCounterWidgetBuilder? buildCounter;
+
+  /// Scroll physics for editable text.
+  final ScrollPhysics? scrollPhysics;
+
+  /// Autofill hints.
+  final Iterable<String>? autofillHints;
+
+  /// Scroll controller for editable text.
+  final ScrollController? scrollController;
+
+  /// Whether IME personalized learning is enabled.
+  final bool enableIMEPersonalizedLearning;
+
+  /// Mouse cursor when hovering this field.
+  final MouseCursor? mouseCursor;
+
+  /// Context menu builder.
+  final EditableTextContextMenuBuilder? contextMenuBuilder;
+
+  /// Spell check configuration.
+  final SpellCheckConfiguration? spellCheckConfiguration;
+
+  /// Magnifier configuration.
+  final TextMagnifierConfiguration? magnifierConfiguration;
+
+  /// Undo history controller.
+  final UndoHistoryController? undoController;
+
+  /// Callback for app private command.
+  final AppPrivateCommandCallback? onAppPrivateCommand;
+
+  /// Whether cursor opacity animates.
+  final bool? cursorOpacityAnimates;
+
+  /// Selection height style.
+  final ui.BoxHeightStyle? selectionHeightStyle;
+
+  /// Selection width style.
+  final ui.BoxWidthStyle? selectionWidthStyle;
+
+  /// Drag start behavior.
+  final DragStartBehavior dragStartBehavior;
+
+  /// Content insertion configuration.
+  final ContentInsertionConfiguration? contentInsertionConfiguration;
+
+  /// State controller for text field material states.
+  // ignore: deprecated_member_use
+  final MaterialStatesController? statesController;
+
+  /// Clip behavior of text field.
+  final Clip clipBehavior;
+
+  /// Whether stylus handwriting is enabled.
+  final bool stylusHandwritingEnabled;
+
+  /// Whether this field can request focus.
+  final bool canRequestFocus;
+
+  /// Hint locales used by input method.
+  final List<Locale>? hintLocales;
+
   /// For async/server-side validation errors (e.g., "email already exists")
   /// This is separate from the synchronous validator and will be displayed
   /// alongside validator errors. Clear this when user changes the field.
@@ -221,19 +443,21 @@ class XTextField extends StatefulWidget {
 
 class _XTextFieldState extends State<XTextField> {
   late final TextEditingController _controller;
-  final FocusNode _focusNode = FocusNode();
+  late final FocusNode _internalFocusNode;
 
   File? _selectedFile;
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
 
   bool get _controllerIsExternal => widget.controller != null;
+  FocusNode get _effectiveFocusNode => widget.focusNode ?? _internalFocusNode;
 
   @override
   void initState() {
     super.initState();
 
     _controller = widget.controller ?? TextEditingController();
+    _internalFocusNode = FocusNode();
 
     // Add listener to external controller
     if (_controllerIsExternal) {
@@ -246,7 +470,7 @@ class _XTextFieldState extends State<XTextField> {
     // Set initial date value
     if (widget.fieldType == XTextFieldType.datepicker &&
         _selectedDate != null) {
-      _controller.text = DateFormat(
+      _controller.text = intl.DateFormat(
         widget.datePickerOptions?.dateFormat ?? 'dd/MM/yyyy',
       ).format(_selectedDate!);
     }
@@ -287,7 +511,7 @@ class _XTextFieldState extends State<XTextField> {
             widget.datePickerOptions?.initialDate) {
       _selectedDate = widget.datePickerOptions?.initialDate;
       if (_selectedDate != null) {
-        _controller.text = DateFormat(
+        _controller.text = intl.DateFormat(
           widget.datePickerOptions?.dateFormat ?? 'dd/MM/yyyy',
         ).format(_selectedDate!);
       }
@@ -314,7 +538,7 @@ class _XTextFieldState extends State<XTextField> {
     } else {
       _controller.dispose();
     }
-    _focusNode.dispose();
+    _internalFocusNode.dispose();
     super.dispose();
   }
 
@@ -412,41 +636,95 @@ class _XTextFieldState extends State<XTextField> {
     Widget? suffixIcon,
   }) {
     final style = widget.style ?? const XTextFieldStyle();
+    final enabled = (isEnable ?? widget.isEnable) && (widget.enabled ?? true);
+    final decoration = (widget.decoration ?? const InputDecoration()).copyWith(
+      contentPadding: widget.contentPadding,
+      labelText: widget.labelOnLine,
+      labelStyle: widget.labelStyle,
+      floatingLabelBehavior: widget.floatingLabelBehavior,
+      hintText: widget.hintText,
+      hintStyle: widget.hintStyle,
+      prefixIcon: widget.prefixIcon,
+      suffixIcon: suffixIcon ?? widget.suffixIcon,
+      border: style.outline(),
+      enabledBorder: style.outline(),
+      focusedBorder: style.focusedOutline(),
+      errorBorder: style.errorOutline(),
+      focusedErrorBorder: style.errorOutline(),
+      counterText: widget.isShowCounter ? null : '',
+    );
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: TextFormField(
+        groupId: widget.groupId,
+        restorationId: widget.restorationId,
         controller: _controller,
-        focusNode: _focusNode,
-        readOnly: isReadOnly ?? !widget.isEnable || widget.isReadOnly,
-        enabled: isEnable ?? widget.isEnable,
+        focusNode: _effectiveFocusNode,
+        readOnly: isReadOnly ?? !enabled || widget.isReadOnly,
+        enabled: enabled,
         onTap: onTapAction ?? widget.onTap,
+        onTapAlwaysCalled: widget.onTapAlwaysCalled,
+        onTapOutside: widget.onTapOutside,
+        onTapUpOutside: widget.onTapUpOutside,
+        onEditingComplete: widget.onEditingComplete,
+        onFieldSubmitted: widget.onFieldSubmitted,
         textAlign: widget.textAlign,
+        textAlignVertical: widget.textAlignVertical,
+        textDirection: widget.textDirection,
         style: widget.textStyle,
+        strutStyle: widget.strutStyle,
+        autofocus: widget.autofocus,
+        showCursor: widget.showCursor,
+        obscuringCharacter: widget.obscuringCharacter,
         obscureText: widget.isObscureText,
+        autocorrect: widget.autocorrect,
+        smartDashesType: widget.smartDashesType,
+        smartQuotesType: widget.smartQuotesType,
+        enableSuggestions: widget.enableSuggestions,
         keyboardType: widget.inputType,
+        keyboardAppearance: widget.keyboardAppearance,
         textCapitalization: widget.textCapitalization,
         textInputAction: widget.textInputAction,
+        maxLengthEnforcement: widget.maxLengthEnforcement,
         minLines: widget.minLines,
         maxLines: widget.maxLines,
+        expands: widget.expands,
         maxLength: widget.maxLength,
+        inputFormatters: widget.inputFormatters,
+        ignorePointers: widget.ignorePointers,
+        cursorWidth: widget.cursorWidth,
+        cursorHeight: widget.cursorHeight,
+        cursorRadius: widget.cursorRadius,
         autovalidateMode: widget.autovalidateMode ?? AutovalidateMode.disabled,
         cursorColor: widget.cursorColor,
-        decoration: InputDecoration(
-          contentPadding: widget.contentPadding,
-          labelText: widget.labelOnLine,
-          labelStyle: widget.labelStyle,
-          floatingLabelBehavior: widget.floatingLabelBehavior,
-          hintText: widget.hintText,
-          hintStyle: widget.hintStyle,
-          prefixIcon: widget.prefixIcon,
-          suffixIcon: suffixIcon ?? widget.suffixIcon,
-          border: style.outline(),
-          enabledBorder: style.outline(),
-          focusedBorder: style.focusedOutline(),
-          errorBorder: style.errorOutline(),
-          focusedErrorBorder: style.errorOutline(),
-          counterText: '',
-        ),
+        cursorErrorColor: widget.cursorErrorColor,
+        scrollPadding: widget.scrollPadding,
+        enableInteractiveSelection: widget.enableInteractiveSelection,
+        selectAllOnFocus: widget.selectAllOnFocus,
+        selectionControls: widget.selectionControls,
+        buildCounter: widget.buildCounter,
+        scrollPhysics: widget.scrollPhysics,
+        autofillHints: widget.autofillHints,
+        scrollController: widget.scrollController,
+        enableIMEPersonalizedLearning: widget.enableIMEPersonalizedLearning,
+        mouseCursor: widget.mouseCursor,
+        contextMenuBuilder: widget.contextMenuBuilder,
+        spellCheckConfiguration: widget.spellCheckConfiguration,
+        magnifierConfiguration: widget.magnifierConfiguration,
+        undoController: widget.undoController,
+        onAppPrivateCommand: widget.onAppPrivateCommand,
+        cursorOpacityAnimates: widget.cursorOpacityAnimates,
+        selectionHeightStyle: widget.selectionHeightStyle,
+        selectionWidthStyle: widget.selectionWidthStyle,
+        dragStartBehavior: widget.dragStartBehavior,
+        contentInsertionConfiguration: widget.contentInsertionConfiguration,
+        statesController: widget.statesController,
+        clipBehavior: widget.clipBehavior,
+        stylusHandwritingEnabled: widget.stylusHandwritingEnabled,
+        canRequestFocus: widget.canRequestFocus,
+        hintLocales: widget.hintLocales,
+        decoration: decoration,
         validator: _buildValidator,
         onSaved: widget.onSaved,
         onChanged: (v) {
@@ -672,7 +950,7 @@ class _XTextFieldState extends State<XTextField> {
       setState(() {
         _selectedDate = picked;
         final fmt = dateOpt?.dateFormat ?? 'dd/MM/yyyy';
-        _controller.text = DateFormat(fmt).format(picked);
+        _controller.text = intl.DateFormat(fmt).format(picked);
       });
       widget.onDateSelected?.call(picked);
     }
@@ -688,7 +966,7 @@ class _XTextFieldState extends State<XTextField> {
     // Convert TimeOfDay to DateTime for formatting
     final now = DateTime.now();
     final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
-    return DateFormat(format).format(dt);
+    return intl.DateFormat(format).format(dt);
   }
 
   /// Extract filename from full path
