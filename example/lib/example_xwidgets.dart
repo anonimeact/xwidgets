@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:example/other_widgets_example.dart';
 import 'package:flutter/material.dart';
 import 'package:xwidgets_pack/models/x_button_style.dart';
 import 'package:xwidgets_pack/models/x_snackbar_config.dart';
@@ -197,6 +198,126 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
                 ),
                 fieldType: .dropdown,
               ),
+              XSpacer(height: 16),
+              XText(
+                'XScrollView Pagination',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              XSpacer(height: 8),
+              SizedBox(
+                height: 360,
+                child: XScrollView<String>(
+                  pageSize: 10,
+                  onInit: _fetchScrollItems,
+                  onLoadMore: _fetchScrollItems,
+                  paginationLoadingBuilder: (_) => Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox.square(
+                          dimension: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                        XSpacer(width: 8),
+                        Text('Loading more...'),
+                      ],
+                    ),
+                  ),
+                  refreshIndicatorBuilder: (_, progress, isRefreshing) {
+                    return Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Chip(
+                        avatar: SizedBox.square(
+                          dimension: 18,
+                          child: CircularProgressIndicator(
+                            value: isRefreshing ? null : progress,
+                            strokeWidth: 2,
+                          ),
+                        ),
+                        label: Text(
+                          isRefreshing ? 'Refreshing...' : 'Pull to refresh',
+                        ),
+                      ),
+                    );
+                  },
+                  onItemTap: (item, index) {
+                    XSnackbar.success(
+                      'Clicked $item at index $index',
+                      position: .bottom,
+                    );
+                  },
+                  separatorBuilder: (_, _) => Divider(height: 1),
+                  itemBuilder: (context, item, index) {
+                    return ListTile(
+                      leading: CircleAvatar(child: Text('${index + 1}')),
+                      title: Text(item),
+                      subtitle: Text('Tap this item to trigger onItemTap'),
+                    );
+                  },
+                ),
+              ),
+              XSpacer(height: 16),
+              XText(
+                'XScrollView Horizontal',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              XSpacer(height: 8),
+              SizedBox(
+                height: 150,
+                child: XScrollView<String>(
+                  scrollDirection: Axis.horizontal,
+                  pageSize: 10,
+                  onInit: _fetchScrollItems,
+                  onLoadMore: _fetchScrollItems,
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  paginationLoadingBuilder: (_) => SizedBox(
+                    width: 80,
+                    child: Center(child: Text('Loading →')),
+                  ),
+                  refreshIndicatorBuilder: (_, progress, isRefreshing) {
+                    return Padding(
+                      padding: EdgeInsets.all(8),
+                      child: CircleAvatar(
+                        child: isRefreshing
+                            ? SizedBox.square(
+                                dimension: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Text('${(progress * 100).round()}%'),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (_, _) => VerticalDivider(width: 12),
+                  onItemTap: (item, _) {
+                    XSnackbar.success('Clicked $item', position: .bottom);
+                  },
+                  itemBuilder: (context, item, index) {
+                    return SizedBox(
+                      width: 140,
+                      child: Card(
+                        child: Center(
+                          child: Text(item, textAlign: TextAlign.center),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              XSpacer(height: 16),
+              XButton(
+                widthInfinity: true,
+                label: 'Open Other Widgets Examples',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const OtherWidgetsExample(),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -223,5 +344,18 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
   Future<void> showXButtonActionCustom() async {
     await Future.delayed(Duration(seconds: 2));
     XSnackbar.success('XButton Pressed', position: .bottom);
+  }
+
+  Future<XScrollPage<String>> _fetchScrollItems(XScrollRequest request) async {
+    await Future.delayed(Duration(milliseconds: 700));
+
+    const totalItems = 45;
+    final end = (request.offset + request.limit).clamp(0, totalItems);
+    final items = List.generate(
+      end - request.offset,
+      (index) => 'Paginated item ${request.offset + index + 1}',
+    );
+
+    return XScrollPage(items: items, hasMore: end < totalItems);
   }
 }

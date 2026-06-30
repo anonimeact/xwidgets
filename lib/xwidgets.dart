@@ -13,15 +13,25 @@
 /// Widgets exported by this library
 /// - `XAppBar` — flexible AppBar replacement with built-in title, actions,
 ///   and optional leading/content customization.
-/// - `XButton` — configurable button supporting variants, icons, and styles.
+/// - `XAsyncView` — state-management agnostic asynchronous state renderer.
+/// - `XBottomSheet` — typed modal and action-sheet helpers.
+/// - `XButton` — configurable button with idle/loading/success/error states,
+///   icons, and styles.
 /// - `XCard` — a simple card wrapper with padding, elevation and shape props.
+/// - `XCollectionView` — paginated list/grid collection.
+/// - `XDebouncedSearchField` — search field with debounce and loading state.
 /// - `XDiagonalStrikethroughText` — draws a diagonal strikethrough over text
 ///   (useful for sale/discount UI or decorative effects).
+/// - `XDialog` — alert, confirmation, custom, and loading dialog helpers.
 /// - `XDoubleDashedLine` — renders two parallel dashed lines, useful as a
 ///   decorative divider.
+/// - `XResponsiveLayout` — responsive mobile/tablet/desktop layout selector.
+/// - `XScreen` — scaffold with safe area and loading/error overlays.
 /// - `XSingleDashedLine` — renders a single dashed line divider.
 /// - `XSnackbar` — a thin wrapper for showing stylable snackbars with
 ///   convenience options for duration and actions.
+/// - `XScrollView` — a state-management agnostic list with initial loading,
+///   pull-to-refresh, pagination, empty state, and retry handling.
 /// - `XSpacer` — shorthand for flexible spacing between widgets.
 /// - `XTextField` — enhanced text field with built-in validator hooks and
 ///   styling options.
@@ -51,12 +61,20 @@
 library;
 
 export 'widgets/x_app_bar.dart';
+export 'widgets/x_async_view.dart';
+export 'widgets/x_bottom_sheet.dart';
 export 'widgets/x_button.dart';
 export 'widgets/x_card.dart';
+export 'widgets/x_collection_view.dart';
+export 'widgets/x_debounced_search_field.dart';
 export 'widgets/x_diagonal_strikethrough_text.dart';
+export 'widgets/x_dialog.dart';
 export 'widgets/x_double_dashed_line.dart';
+export 'widgets/x_responsive_layout.dart';
+export 'widgets/x_screen.dart';
 export 'widgets/x_single_dashed_line.dart';
 export 'widgets/x_snackbar.dart';
+export 'widgets/x_scrollview.dart';
 export 'widgets/x_spacer.dart';
 export 'widgets/x_text_field.dart';
 export 'widgets/x_text.dart';

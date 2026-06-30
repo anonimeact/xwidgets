@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:xwidgets_pack/models/x_button_style.dart';
 
-/// A customizable button widget that supports icons, loading state,
-/// custom text widget, rounded style, and various appearance configurations.
+/// Visual states supported directly by [XButton].
+enum XButtonState { idle, loading, success, error }
+
+/// A customizable button supporting idle, loading, success, and error states,
+/// icons, custom content, rounded style, and native button configuration.
 ///
 /// The [XButton] is designed to simplify button creation with flexible styling
 /// using [XButtonStyle]. It supports prefix, center, and suffix icons,
@@ -34,8 +37,19 @@ class XButton extends StatelessWidget {
     this.clipBehavior,
     this.statesController,
     this.textStyle,
+    this.state,
     this.isLoading = false,
     this.isLoadingInside = false,
+    this.loadingLabel,
+    this.successLabel = 'Success',
+    this.errorLabel = 'Try again',
+    this.loadingChild,
+    this.successChild,
+    this.errorChild,
+    this.loadingIndicator,
+    this.successIcon = const Icon(Icons.check),
+    this.errorIcon = const Icon(Icons.refresh),
+    this.stateTransitionDuration = const Duration(milliseconds: 200),
     this.isEnable = true,
     this.isForceTap = false,
     this.child,
@@ -62,11 +76,48 @@ class XButton extends StatelessWidget {
   /// Border radius for the button shape.
   final double radius;
 
+  /// Explicit visual state controlled by application state.
+  ///
+  /// When null, [isLoading] preserves the legacy idle/loading behavior.
+  final XButtonState? state;
+
   /// Whether to show a loading indicator instead of the button.
+  ///
+  /// Kept for backward compatibility. [state] takes priority when supplied.
   final bool isLoading;
 
-  /// Whether to show loading indicator inside [ElevatedButton].
+  /// Whether a legacy [isLoading] indicator remains inside [ElevatedButton].
   final bool isLoadingInside;
+
+  /// Optional label shown beside the default loading indicator.
+  final String? loadingLabel;
+
+  /// Default label for [XButtonState.success].
+  final String successLabel;
+
+  /// Default label for [XButtonState.error].
+  final String errorLabel;
+
+  /// Fully custom content for [XButtonState.loading].
+  final Widget? loadingChild;
+
+  /// Fully custom content for [XButtonState.success].
+  final Widget? successChild;
+
+  /// Fully custom content for [XButtonState.error].
+  final Widget? errorChild;
+
+  /// Custom indicator used by the default loading content.
+  final Widget? loadingIndicator;
+
+  /// Icon used by the default success content.
+  final Widget successIcon;
+
+  /// Icon used by the default error content.
+  final Widget errorIcon;
+
+  /// Animation duration when [state] changes.
+  final Duration stateTransitionDuration;
 
   /// Controls whether the button is enabled.
   ///
@@ -112,6 +163,8 @@ class XButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final buttonStyle = style ?? XButtonStyle();
+    final effectiveState =
+        state ?? (isLoading ? XButtonState.loading : XButtonState.idle);
     final buttonTextStyle =
         textStyle ??
         buttonStyle.textStyle ??
@@ -119,7 +172,7 @@ class XButton extends StatelessWidget {
           fontSize: buttonStyle.textSize,
           color: buttonStyle.foreground,
         );
-    final buttonContent = Row(
+    final idleContent = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         // Prefix Icon
@@ -146,7 +199,7 @@ class XButton extends StatelessWidget {
 
             if (label != null) Text(label!, style: buttonTextStyle),
 
-            if (child != null) child!,
+            ?child,
           ],
         ),
 
@@ -162,6 +215,52 @@ class XButton extends StatelessWidget {
             : const SizedBox.shrink(),
       ],
     );
+    final stateContent = switch (effectiveState) {
+      XButtonState.idle => idleContent,
+      XButtonState.loading =>
+        loadingChild ??
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                loadingIndicator ??
+                    SizedBox.square(
+                      dimension: 20,
+                      child: CircularProgressIndicator(
+                        color: buttonStyle.loadingColor,
+                        strokeWidth: buttonStyle.loadingStrokeWidth,
+                      ),
+                    ),
+                if (loadingLabel != null) ...[
+                  const SizedBox(width: 8),
+                  Text(loadingLabel!, style: buttonTextStyle),
+                ],
+              ],
+            ),
+      XButtonState.success =>
+        successChild ??
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                successIcon,
+                const SizedBox(width: 8),
+                Text(successLabel, style: buttonTextStyle),
+              ],
+            ),
+      XButtonState.error =>
+        errorChild ??
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                errorIcon,
+                const SizedBox(width: 8),
+                Text(errorLabel, style: buttonTextStyle),
+              ],
+            ),
+    };
+    final isInteractiveState =
+        effectiveState == XButtonState.idle ||
+        effectiveState == XButtonState.error;
+    final canInteract = isForceTap == true || (isEnable && isInteractiveState);
     final mergedElevatedStyle = styleButtonRounded(
       radius: radius,
       background: isEnable
@@ -180,7 +279,8 @@ class XButton extends StatelessWidget {
       height: height ?? 48,
       width: widthInfinity ? double.infinity : width,
       child:
-          isLoading &&
+          state == null &&
+              effectiveState == XButtonState.loading &&
               !isLoadingInside // Show loading indicator instead of button.
           ? Center(
               child: SizedBox(
@@ -193,14 +293,8 @@ class XButton extends StatelessWidget {
               ),
             )
           : ElevatedButton(
-              onPressed: () {
-                isForceTap == true
-                    ? onPressed()
-                    : isEnable
-                    ? onPressed()
-                    : null;
-              },
-              onLongPress: onLongPress,
+              onPressed: canInteract ? () => onPressed() : null,
+              onLongPress: canInteract ? onLongPress : null,
               onHover: onHover,
               onFocusChange: onFocusChange,
               focusNode: focusNode,
@@ -208,11 +302,14 @@ class XButton extends StatelessWidget {
               clipBehavior: clipBehavior ?? Clip.none,
               statesController: statesController,
               style: mergedElevatedStyle,
-              child: isLoading && isLoadingInside
+              child:
+                  state == null &&
+                      effectiveState == XButtonState.loading &&
+                      isLoadingInside
                   ? Stack(
                       alignment: Alignment.center,
                       children: [
-                        Opacity(opacity: 0, child: buttonContent),
+                        Opacity(opacity: 0, child: idleContent),
                         SizedBox(
                           width: 20,
                           height: 20,
@@ -223,7 +320,13 @@ class XButton extends StatelessWidget {
                         ),
                       ],
                     )
-                  : buttonContent,
+                  : AnimatedSwitcher(
+                      duration: stateTransitionDuration,
+                      child: KeyedSubtree(
+                        key: ValueKey(effectiveState),
+                        child: stateContent,
+                      ),
+                    ),
             ),
     );
   }

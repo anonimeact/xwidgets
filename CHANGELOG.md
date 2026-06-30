@@ -1,3 +1,17 @@
+## 1.2.0 - 2026-06-30
+
+* Add `XScrollView<T>` with initial fetching, vertical/horizontal pagination, pull-to-refresh, empty/error states, retry, item interactions, and custom loading indicators.
+* Add `XCollectionView<T>` with list and grid layouts using the same paginated data contract as `XScrollView`.
+* Add state-management agnostic `XAsyncView<T>` and `XAsyncState<T>` for initial, loading, data, empty, and error UI.
+* Add `XDebouncedSearchField` with configurable debounce, minimum query length, clear action, async loading, submission, and error handling.
+* Add `XResponsiveLayout`, `XBreakpoints`, and `XResponsiveSize` for mobile, tablet, and desktop layouts.
+* Add typed `XDialog` and `XBottomSheet` helpers for alerts, confirmation, loading, custom content, and action sheets.
+* Add `XScreen` with safe-area handling, keyboard dismissal, constrained content, and loading/error overlays.
+* Extend `XButton` with externally controlled idle, loading, success, and error states while preserving `isLoading` and `isLoadingInside`.
+* Update `XTextField` for `dropdown_search` 7 and `file_picker` 11 APIs.
+* Upgrade `dropdown_search` to `^7.0.0` and `file_picker` to `^11.0.2`.
+* Expand the example application, automated widget tests, API documentation, and README navigation/examples.
+
 ## 1.1.0
 
 * Enhance `XButton` with `isLoadingInside` and preserved button width while loading.

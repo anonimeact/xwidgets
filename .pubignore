@@ -1,3 +1,10 @@
+/build/
+/.dart_tool/
+/coverage/
+*.iml
+.idea/
+.vscode/
+
 example/linux/flutter/generated_plugin_registrant.cc
 example/linux/flutter/generated_plugin_registrant.h
 example/linux/flutter/generated_plugins.cmake
