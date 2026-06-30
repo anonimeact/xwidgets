@@ -5,7 +5,7 @@
 * Keep file, camera, and gallery selection behavior intact while making the package platform-agnostic at the library boundary.
 * Silence deprecated `cacheExtent` analyzer info in `XScrollView` with targeted ignores that remain compatible with the current Flutter SDK used by this package.
 
-## 1.2.0 - 2026-06-30
+## 1.2.0
 
 * Add `XScrollView<T>` with initial fetching, vertical/horizontal pagination, pull-to-refresh, empty/error states, retry, item interactions, and custom loading indicators.
 * Add `XCollectionView<T>` with list and grid layouts using the same paginated data contract as `XScrollView`.
