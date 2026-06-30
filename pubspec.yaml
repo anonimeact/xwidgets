@@ -1,6 +1,6 @@
 name: xwidgets_pack
 description: The library focuses on lightweight, well-documented components that are easy to style and compose.
-version: 1.2.0
+version: 1.2.1
 repository: https://github.com/anonimeact/xwidgets.git
 
 environment:
@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   dropdown_search: ^7.0.0
-  file_picker: ^11.0.2
+  file_selector: ^1.0.3
   flutter:
     sdk: flutter
   freezed_annotation: ^3.1.0

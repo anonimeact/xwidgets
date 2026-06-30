@@ -1,13 +1,12 @@
 import 'dart:ui' as ui show BoxHeightStyle, BoxWidthStyle;
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
 import 'package:xwidgets_pack/utils/x_textfield_options.dart';
 import 'package:xwidgets_pack/utils/x_textfield_style.dart';
@@ -289,7 +288,7 @@ class XTextField extends StatefulWidget {
   /// ```
   final String? Function(String?)? validator;
 
-  final void Function(File?)? onFileSelected;
+  final void Function(XFile?)? onFileSelected;
   final void Function(dynamic)? onDropdownChanged;
   final void Function(DateTime?)? onDateSelected;
   final void Function(TimeOfDay?)? onTimeSelected;
@@ -445,7 +444,7 @@ class _XTextFieldState extends State<XTextField> {
   late final TextEditingController _controller;
   late final FocusNode _internalFocusNode;
 
-  File? _selectedFile;
+  XFile? _selectedFile;
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
 
@@ -806,20 +805,14 @@ class _XTextFieldState extends State<XTextField> {
 
   Future<void> _pickDocument() async {
     try {
-      final result = await FilePicker.pickFiles(type: FileType.any);
+      final file = await openFile();
 
-      if (result != null && result.files.single.path != null) {
-        final file = File(result.files.single.path!);
-
-        if (mounted) {
-          setState(() {
-            _selectedFile = file;
-            // Display only filename, not full path
-            _controller.text = _getFileName(file.path);
-          });
-          // Callback gets full file object
-          widget.onFileSelected?.call(file);
-        }
+      if (file != null && mounted) {
+        setState(() {
+          _selectedFile = file;
+          _controller.text = file.name;
+        });
+        widget.onFileSelected?.call(file);
       }
     } catch (e) {
       if (mounted) {
@@ -892,16 +885,13 @@ class _XTextFieldState extends State<XTextField> {
   Future<void> _pickCamera() async {
     try {
       final picker = ImagePicker();
-      final x = await picker.pickImage(source: ImageSource.camera);
+      final file = await picker.pickImage(source: ImageSource.camera);
 
-      if (x != null && mounted) {
-        final file = File(x.path);
+      if (file != null && mounted) {
         setState(() {
           _selectedFile = file;
-          // Display only filename, not full path
-          _controller.text = _getFileName(file.path);
+          _controller.text = file.name;
         });
-        // Callback gets full file object
         widget.onFileSelected?.call(file);
       }
     } catch (e) {
@@ -916,16 +906,13 @@ class _XTextFieldState extends State<XTextField> {
   Future<void> _pickGallery() async {
     try {
       final picker = ImagePicker();
-      final x = await picker.pickImage(source: ImageSource.gallery);
+      final file = await picker.pickImage(source: ImageSource.gallery);
 
-      if (x != null && mounted) {
-        final file = File(x.path);
+      if (file != null && mounted) {
         setState(() {
           _selectedFile = file;
-          // Display only filename, not full path
-          _controller.text = _getFileName(file.path);
+          _controller.text = file.name;
         });
-        // Callback gets full file object
         widget.onFileSelected?.call(file);
       }
     } catch (e) {
@@ -967,12 +954,6 @@ class _XTextFieldState extends State<XTextField> {
     final now = DateTime.now();
     final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
     return intl.DateFormat(format).format(dt);
-  }
-
-  /// Extract filename from full path
-  /// Example: "/storage/emulated/0/Download/document.pdf" -> "document.pdf"
-  String _getFileName(String path) {
-    return path.split('/').last;
   }
 
   Future<void> _showTimePicker() async {
@@ -1019,7 +1000,7 @@ class _XTextFieldState extends State<XTextField> {
   String get value => _controller.text;
 
   /// Get selected file (for file picker type)
-  File? get selectedFile => _selectedFile;
+  XFile? get selectedFile => _selectedFile;
 
   /// Get selected date (for date picker type)
   DateTime? get selectedDate => _selectedDate;

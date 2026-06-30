@@ -1,3 +1,10 @@
+## 1.2.1 - 2026-06-30
+
+* Replace `file_picker` usage in `XTextField` with `file_selector` to avoid pulling platform-specific desktop-only transitive code into the public package surface.
+* Remove `dart:io` from the public `XTextField` API by switching file callbacks and state from `File` to `XFile`, improving Web and WASM compatibility for pub.dev scoring.
+* Keep file, camera, and gallery selection behavior intact while making the package platform-agnostic at the library boundary.
+* Silence deprecated `cacheExtent` analyzer info in `XScrollView` with targeted ignores that remain compatible with the current Flutter SDK used by this package.
+
 ## 1.2.0 - 2026-06-30
 
 * Add `XScrollView<T>` with initial fetching, vertical/horizontal pagination, pull-to-refresh, empty/error states, retry, item interactions, and custom loading indicators.

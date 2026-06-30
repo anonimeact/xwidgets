@@ -338,6 +338,7 @@ class _XScrollViewState<T> extends State<XScrollView<T>> {
         shrinkWrap: widget.shrinkWrap,
         reverse: widget.reverse,
         primary: widget.primary ?? false,
+        // ignore: deprecated_member_use
         cacheExtent: widget.cacheExtent,
         keyboardDismissBehavior: widget.keyboardDismissBehavior,
         restorationId: widget.restorationId,
@@ -358,6 +359,7 @@ class _XScrollViewState<T> extends State<XScrollView<T>> {
         shrinkWrap: widget.shrinkWrap,
         reverse: widget.reverse,
         primary: widget.primary ?? false,
+        // ignore: deprecated_member_use
         cacheExtent: widget.cacheExtent,
         keyboardDismissBehavior: widget.keyboardDismissBehavior,
         restorationId: widget.restorationId,
