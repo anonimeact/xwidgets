@@ -117,23 +117,33 @@ class XText extends StatelessWidget {
       behavior: behavior,
       excludeFromSemantics: excludeFromSemantics,
       dragStartBehavior: dragStartBehavior,
-      child: Row(
-        mainAxisSize: isExpand ? .max : .min,
-        crossAxisAlignment: iconVerticalAlignment ?? .center,
-        children: [
-          icon != null
-              ? Row(
-                  mainAxisSize: .min,
-                  children: [
-                    icon!,
-                    SizedBox(width: iconSpacer),
-                  ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final hasBoundedWidth = constraints.hasBoundedWidth;
+          final textChild = hasBoundedWidth || isExpand
+              ? Flexible(
+                  fit: isExpand ? FlexFit.tight : FlexFit.loose,
+                  child: _buildTextContainer(),
                 )
-              : SizedBox.shrink(),
-          isExpand
-              ? Flexible(child: _buildTextContainer())
-              : _buildTextContainer(),
-        ],
+              : _buildTextContainer();
+
+          return Row(
+            mainAxisSize: isExpand ? .max : .min,
+            crossAxisAlignment: iconVerticalAlignment ?? .center,
+            children: [
+              icon != null
+                  ? Row(
+                      mainAxisSize: .min,
+                      children: [
+                        icon!,
+                        SizedBox(width: iconSpacer),
+                      ],
+                    )
+                  : SizedBox.shrink(),
+              textChild,
+            ],
+          );
+        },
       ),
     );
   }

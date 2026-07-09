@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:example/look_presets_example.dart';
+import 'package:example/look_scrollview_demo.dart';
 import 'package:example/other_widgets_example.dart';
 import 'package:flutter/material.dart';
 import 'package:xwidgets_pack/models/x_button_style.dart';
@@ -9,8 +9,11 @@ import 'package:xwidgets_pack/utils/x_form_validators.dart';
 import 'package:xwidgets_pack/utils/x_textfield_options.dart';
 import 'package:xwidgets_pack/xwidgets.dart';
 
+/// Full widget showcase used for [XLook.standard] and [XLook.material].
 class ExampleXwidgets extends StatefulWidget {
-  const ExampleXwidgets({super.key});
+  const ExampleXwidgets({super.key, this.look = XLook.standard});
+
+  final XLook look;
 
   @override
   State<ExampleXwidgets> createState() => _ExampleXwidgetsState();
@@ -24,43 +27,65 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
 
   final _formKey = GlobalKey<FormState>();
 
+  XLook get look => widget.look;
+
+  String get _title => look == XLook.material
+      ? 'XWidgets (Material)'
+      : 'XWidgets';
+
+  void _handleBack() {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    } else {
+      exit(0);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: XAppBar(
-        title: 'XWidgets',
-        backButton: Icon(Icons.logout),
-        onTapBack: () => exit(0),
+        look: look,
+        title: _title,
+        backButton: const Icon(Icons.arrow_back_outlined),
+        onTapBack: _handleBack,
       ),
       body: XCard(
-        margin: EdgeInsets.all(16),
-        padding: EdgeInsets.all(16),
+        look: look,
+        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             children: [
               XText(
                 'X Text Example',
-                icon: Icon(Icons.android),
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                look: look,
+                icon: const Icon(Icons.android),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               XText(
                 'Long Text Example Long Text Example Long Text Example Long Text Example Long Text Example Long Text Example',
+                look: look,
                 iconVerticalAlignment: .start,
                 isExpand: true,
-                icon: Icon(Icons.android),
-                style: TextStyle(fontWeight: FontWeight.normal, fontSize: 18),
+                icon: const Icon(Icons.android),
+                style: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 18,
+                ),
               ),
-              XSpacer(height: 8),
-              XSingleDashedLine(),
-              XDiagonalStrikethroughText(
+              const XSpacer(height: 8),
+              XSingleDashedLine(look: look),
+              const XDiagonalStrikethroughText(
                 'DICORET',
                 diagonalType: .bottomTop,
                 lineColor: Colors.red,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
-              XDoubleDashedLine(),
-              XSpacer(height: 16),
+              XDoubleDashedLine(look: look),
+              const XSpacer(height: 16),
               XButton(
+                look: look,
                 isLoading: isLoadingButtonTitle,
                 onPressed: () async {
                   setState(() => isLoadingButtonTitle = true);
@@ -69,16 +94,16 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
                 },
                 label: 'XButton with Title',
               ),
-              XSpacer(height: 8),
+              const XSpacer(height: 8),
               XButton(
                 isLoading: isLoadingInsideButton,
                 isLoadingInside: true,
                 onPressed: () async {
                   setState(() => isLoadingInsideButton = true);
-                  await Future.delayed(Duration(seconds: 2));
+                  await Future.delayed(const Duration(seconds: 2));
                   setState(() => isLoadingInsideButton = false);
                 },
-                style: XButtonStyle(
+                style: const XButtonStyle(
                   background: Colors.green,
                   foreground: Colors.white,
                   borderColor: Colors.greenAccent,
@@ -87,8 +112,9 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
                 ),
                 label: 'XButton Loading Inside',
               ),
-              XSpacer(height: 8),
+              const XSpacer(height: 8),
               XButton(
+                look: look,
                 height: 56,
                 isLoading: isLoadingButtonCustom,
                 onPressed: () async {
@@ -101,47 +127,50 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
                   children: [
                     XText(
                       'On Press',
-                      style: TextStyle(fontSize: 11),
-                      icon: Icon(Icons.ads_click_rounded),
+                      look: look,
+                      style: const TextStyle(fontSize: 11),
+                      icon: const Icon(Icons.ads_click_rounded),
                     ),
-                    Text('XButton Custom View'),
+                    const Text('XButton Custom View'),
                   ],
                 ),
               ),
-              XSpacer(height: 8),
+              const XSpacer(height: 8),
               XShimmer(
                 isLoading: isLoadingShimmerCustom,
                 shimmerChild: Column(
                   children: [
-                    XShimmerChild(width: 100, height: 45),
-                    XSpacer(height: 10),
-                    XShimmerChild(width: 100, height: 45),
+                    XShimmerChild(look: look, width: 100, height: 45),
+                    const XSpacer(height: 10),
+                    XShimmerChild(look: look, width: 100, height: 45),
                   ],
                 ),
                 child: Container(
                   width: 100,
                   height: 100,
                   alignment: .center,
-                  child: Text('HelloWord'),
+                  child: const Text('HelloWord'),
                 ),
               ),
-              XSpacer(height: 16),
+              const XSpacer(height: 16),
               XButton(
+                look: look,
                 height: 56,
                 widthInfinity: true,
                 isLoading: isLoadingShimmerCustom,
                 onPressed: () async {
                   setState(() => isLoadingShimmerCustom = true);
-                  await Future.delayed(Duration(seconds: 2));
+                  await Future.delayed(const Duration(seconds: 2));
                   setState(() => isLoadingShimmerCustom = false);
                 },
-                child: Text('XShimmer Loading View'),
+                child: const Text('XShimmer Loading View'),
               ),
-              XSpacer(height: 16),
+              const XSpacer(height: 16),
               Form(
                 key: _formKey,
                 child: XTextField(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 2),
+                  look: look,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 2),
                   labelOnLine: 'Nama',
                   hintText: 'Siapa namamu?',
                   textAlign: .center,
@@ -160,165 +189,57 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
                   ]),
                 ),
               ),
-
               XButton(
+                look: look,
                 onPressed: () => _formKey.currentState?.validate(),
                 label: 'Validasi Form',
               ),
-
-              XHeight(8),
+              const XHeight(8),
               XTextField(
+                look: look,
                 label: 'Date Picker',
                 fieldType: .datepicker,
-                suffixIcon: Icon(Icons.calendar_month_outlined),
+                suffixIcon: const Icon(Icons.calendar_month_outlined),
               ),
-              XSpacer(height: 8),
+              const XSpacer(height: 8),
               XTextField(
+                look: look,
                 labelOnLine: 'Date Time labelOnLine',
                 fieldType: .timepicker,
-                suffixIcon: Icon(Icons.timelapse_outlined),
-                onTimeSelected: (time) =>
-                    XSnackbar.success('DateTime ${time?.hour}', position: .top),
+                suffixIcon: const Icon(Icons.timelapse_outlined),
+                onTimeSelected: (time) => XSnackbar.success(
+                  'DateTime ${time?.hour}',
+                  position: .top,
+                  look: look,
+                ),
               ),
-              XSpacer(height: 8),
+              const XSpacer(height: 8),
               XTextField(
+                look: look,
                 label: 'File Picker',
                 isRequired: true,
                 fieldType: .file,
-                onFileSelected: (file) =>
-                    XSnackbar.success('DateTime ${file?.path}', position: .top),
+                onFileSelected: (file) => XSnackbar.success(
+                  'DateTime ${file?.path}',
+                  position: .top,
+                  look: look,
+                ),
               ),
-              XSpacer(height: 8),
+              const XSpacer(height: 8),
               XTextField(
+                look: look,
                 label: 'Dropdown labelOnLine',
                 dropdownOptions: XTextFieldDropdownOptions(
-                  items: ["Sumatera", 'Jawa', 'Kalimantan'],
-                  itemAsString: (item) => item,
+                  items: const ['Sumatera', 'Jawa', 'Kalimantan'],
+                  itemAsString: (item) => item as String,
                 ),
                 fieldType: .dropdown,
               ),
-              XSpacer(height: 16),
-              XText(
-                'XScrollView Pagination',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-              XSpacer(height: 8),
-              SizedBox(
-                height: 360,
-                child: XScrollView<String>(
-                  pageSize: 10,
-                  onInit: _fetchScrollItems,
-                  onLoadMore: _fetchScrollItems,
-                  paginationLoadingBuilder: (_) => Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox.square(
-                          dimension: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                        XSpacer(width: 8),
-                        Text('Loading more...'),
-                      ],
-                    ),
-                  ),
-                  refreshIndicatorBuilder: (_, progress, isRefreshing) {
-                    return Padding(
-                      padding: EdgeInsets.all(12),
-                      child: Chip(
-                        avatar: SizedBox.square(
-                          dimension: 18,
-                          child: CircularProgressIndicator(
-                            value: isRefreshing ? null : progress,
-                            strokeWidth: 2,
-                          ),
-                        ),
-                        label: Text(
-                          isRefreshing ? 'Refreshing...' : 'Pull to refresh',
-                        ),
-                      ),
-                    );
-                  },
-                  onItemTap: (item, index) {
-                    XSnackbar.success(
-                      'Clicked $item at index $index',
-                      position: .bottom,
-                    );
-                  },
-                  separatorBuilder: (_, _) => Divider(height: 1),
-                  itemBuilder: (context, item, index) {
-                    return ListTile(
-                      leading: CircleAvatar(child: Text('${index + 1}')),
-                      title: Text(item),
-                      subtitle: Text('Tap this item to trigger onItemTap'),
-                    );
-                  },
-                ),
-              ),
-              XSpacer(height: 16),
-              XText(
-                'XScrollView Horizontal',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-              XSpacer(height: 8),
-              SizedBox(
-                height: 150,
-                child: XScrollView<String>(
-                  scrollDirection: Axis.horizontal,
-                  pageSize: 10,
-                  onInit: _fetchScrollItems,
-                  onLoadMore: _fetchScrollItems,
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  paginationLoadingBuilder: (_) => SizedBox(
-                    width: 80,
-                    child: Center(child: Text('Loading →')),
-                  ),
-                  refreshIndicatorBuilder: (_, progress, isRefreshing) {
-                    return Padding(
-                      padding: EdgeInsets.all(8),
-                      child: CircleAvatar(
-                        child: isRefreshing
-                            ? SizedBox.square(
-                                dimension: 18,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : Text('${(progress * 100).round()}%'),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (_, _) => VerticalDivider(width: 12),
-                  onItemTap: (item, _) {
-                    XSnackbar.success('Clicked $item', position: .bottom);
-                  },
-                  itemBuilder: (context, item, index) {
-                    return SizedBox(
-                      width: 140,
-                      child: Card(
-                        child: Center(
-                          child: Text(item, textAlign: TextAlign.center),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              XSpacer(height: 16),
+              const XSpacer(height: 16),
+              LookScrollViewDemo(look: look),
+              const XSpacer(height: 16),
               XButton(
-                widthInfinity: true,
-                label: 'Open Look Presets Showcase',
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const LookPresetsExample(),
-                    ),
-                  );
-                },
-              ),
-              XSpacer(height: 8),
-              XButton(
+                look: look,
                 widthInfinity: true,
                 label: 'Open Other Widgets Examples',
                 onPressed: () {
@@ -337,14 +258,15 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
   }
 
   Future<void> showXButtonActionTitle() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     XSnackbar.warning(
       'XButton Pressed',
       position: .top,
       title: 'Title',
+      look: look,
       config: XSnackbarConfig(
         radius: 0,
-        leadingIcon: Icon(Icons.ac_unit_sharp, color: Colors.white),
+        leadingIcon: const Icon(Icons.ac_unit_sharp, color: Colors.white),
         actionLabel: 'Tutup',
         margin: EdgeInsets.zero,
       ),
@@ -353,20 +275,7 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
   }
 
   Future<void> showXButtonActionCustom() async {
-    await Future.delayed(Duration(seconds: 2));
-    XSnackbar.success('XButton Pressed', position: .bottom);
-  }
-
-  Future<XScrollPage<String>> _fetchScrollItems(XScrollRequest request) async {
-    await Future.delayed(Duration(milliseconds: 700));
-
-    const totalItems = 45;
-    final end = (request.offset + request.limit).clamp(0, totalItems);
-    final items = List.generate(
-      end - request.offset,
-      (index) => 'Paginated item ${request.offset + index + 1}',
-    );
-
-    return XScrollPage(items: items, hasMore: end < totalItems);
+    await Future.delayed(const Duration(seconds: 2));
+    XSnackbar.success('XButton Pressed', position: .bottom, look: look);
   }
 }

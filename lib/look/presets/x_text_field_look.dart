@@ -49,13 +49,16 @@ class XTextFieldLook {
       ),
       XLook.neumorphism => XTextFieldLook(
         style: XTextFieldStyle(
-          outlineColor: const Color(0xFFE0E5EC),
-          focusedOutlineColor: const Color(0xFFA3B1C6),
+          outlineColor: const Color(0xFFA3B1C6),
+          focusedOutlineColor: const Color(0xFF7F8FA6),
           errorOutlineColor: const Color(0xFFE57373),
           borderRadius: tokens.radius,
-          outlineWidth: 1,
-          focusedOutlineWidth: 1.5,
-          errorOutlineWidth: 1.5,
+          outlineWidth: 2,
+          focusedOutlineWidth: 2.5,
+          errorOutlineWidth: 2,
+          fillColor: tokens.background ?? const Color(0xFFE0E5EC),
+          insetShadowColor: const Color(0xFFA3B1C6),
+          insetHighlightColor: const Color(0xFFFFFFFF),
         ),
       ),
       XLook.retro => XTextFieldLook(

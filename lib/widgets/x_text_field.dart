@@ -643,7 +643,7 @@ class _XTextFieldState extends State<XTextField> {
     final style =
         widget.style ?? XTextFieldLook.resolve(widget.look).style;
     final enabled = (isEnable ?? widget.isEnable) && (widget.enabled ?? true);
-    final decoration = (widget.decoration ?? const InputDecoration()).copyWith(
+    final sharedDecoration = (widget.decoration ?? const InputDecoration()).copyWith(
       contentPadding: widget.contentPadding,
       labelText: widget.labelOnLine,
       labelStyle: widget.labelStyle,
@@ -652,17 +652,19 @@ class _XTextFieldState extends State<XTextField> {
       hintStyle: widget.hintStyle,
       prefixIcon: widget.prefixIcon,
       suffixIcon: suffixIcon ?? widget.suffixIcon,
-      border: style.outline(),
-      enabledBorder: style.outline(),
-      focusedBorder: style.focusedOutline(),
-      errorBorder: style.errorOutline(),
-      focusedErrorBorder: style.errorOutline(),
       counterText: widget.isShowCounter ? null : '',
     );
+    final decoration = style.usesInsetDecoration
+        ? style.insetDecoration(sharedDecoration)
+        : sharedDecoration.copyWith(
+            border: style.outline(),
+            enabledBorder: style.outline(),
+            focusedBorder: style.focusedOutline(),
+            errorBorder: style.errorOutline(),
+            focusedErrorBorder: style.errorOutline(),
+          );
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: TextFormField(
+    final field = TextFormField(
         groupId: widget.groupId,
         restorationId: widget.restorationId,
         controller: _controller,
@@ -735,6 +737,25 @@ class _XTextFieldState extends State<XTextField> {
         onSaved: widget.onSaved,
         onChanged: (v) {
           widget.onChanged?.call(v);
+        },
+      );
+
+    if (!style.usesInsetDecoration) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: field,
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: ListenableBuilder(
+        listenable: _effectiveFocusNode,
+        builder: (context, _) {
+          return style.wrapInsetField(
+            focused: _effectiveFocusNode.hasFocus,
+            child: field,
+          );
         },
       ),
     );
@@ -834,37 +855,45 @@ class _XTextFieldState extends State<XTextField> {
     final style =
         widget.style ?? XTextFieldLook.resolve(widget.look).style;
     final opt = widget.dropdownOptions ?? const XTextFieldDropdownOptions();
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: DropdownSearch<dynamic>(
-        items: (filter, loadProps) => opt.items ?? [],
-        selectedItem: opt.selectedItem,
-        itemAsString: opt.itemAsString ?? (item) => item.toString(),
-        compareFn: (a, b) => a == b,
-        onSelected: (value) {
-          widget.onDropdownChanged?.call(value);
-        },
-        validator: _buildDropdownValidator,
-        autoValidateMode: widget.autovalidateMode ?? AutovalidateMode.disabled,
-        decoratorProps: DropDownDecoratorProps(
-          decoration: InputDecoration(
-            hintText: widget.hintText,
-            prefixIcon: widget.prefixIcon,
-            suffixIcon: widget.suffixIcon,
+    final sharedDecoration = InputDecoration(
+      hintText: widget.hintText,
+      prefixIcon: widget.prefixIcon,
+      suffixIcon: widget.suffixIcon,
+    );
+    final decoration = style.usesInsetDecoration
+        ? style.insetDecoration(sharedDecoration)
+        : sharedDecoration.copyWith(
             border: style.outline(),
             enabledBorder: style.outline(),
             focusedBorder: style.focusedOutline(),
             errorBorder: style.errorOutline(),
             focusedErrorBorder: style.errorOutline(),
-          ),
-        ),
-        popupProps: PopupProps.menu(
-          showSearchBox: opt.showSearchBox,
-          fit: FlexFit.loose,
-          constraints: const BoxConstraints(),
-        ),
+          );
+    final dropdown = DropdownSearch<dynamic>(
+      items: (filter, loadProps) => opt.items ?? [],
+      selectedItem: opt.selectedItem,
+      itemAsString: opt.itemAsString ?? (item) => item.toString(),
+      compareFn: (a, b) => a == b,
+      onSelected: (value) {
+        widget.onDropdownChanged?.call(value);
+      },
+      validator: _buildDropdownValidator,
+      autoValidateMode: widget.autovalidateMode ?? AutovalidateMode.disabled,
+      decoratorProps: DropDownDecoratorProps(
+        decoration: decoration,
       ),
+      popupProps: PopupProps.menu(
+        showSearchBox: opt.showSearchBox,
+        fit: FlexFit.loose,
+        constraints: const BoxConstraints(),
+      ),
+    );
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: style.usesInsetDecoration
+          ? style.wrapInsetField(focused: false, child: dropdown)
+          : dropdown,
     );
   }
 

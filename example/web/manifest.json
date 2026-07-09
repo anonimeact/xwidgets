@@ -1,11 +1,11 @@
 {
-    "name": "example",
-    "short_name": "example",
+    "name": "XWidgets Example",
+    "short_name": "XWidgets",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FFFFFF",
+    "theme_color": "#00BAFF",
+    "description": "Example app for the xwidgets package by anonimeact.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

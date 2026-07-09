@@ -10,7 +10,7 @@ boilerplate.
 [![GitHub](https://img.shields.io/badge/source-GitHub-181717?logo=github)](https://github.com/anonimeact/xwidgets)
 
 [Getting started](#getting-started) · [Look presets](#look-presets) · [Widget catalog](#widget-catalog) ·
-[Examples](#complete-examples)
+[UI showcase](#ui-showcase) · [Examples](#complete-examples)
 
 </div>
 
@@ -21,6 +21,7 @@ boilerplate.
     <td width="62%" valign="top">
       <h2 id="table-of-contents">Table of contents</h2>
       <ul>
+        <li><a href="#ui-showcase">UI showcase</a></li>
         <li><a href="#why-xwidgets">Why XWidgets?</a></li>
         <li><a href="#getting-started">Getting started</a></li>
         <li><a href="#look-presets">Look presets</a></li>
@@ -44,6 +45,48 @@ boilerplate.
         alt="XWidgets example"
         width="320"
       />
+    </td>
+  </tr>
+</table>
+
+## UI showcase
+
+Screen recordings from the example app — each look preset applied to the same
+widget set.
+
+<table>
+  <tr align="center">
+    <td>
+      <video src="docs/demos/look-standard.mov" width="220" autoplay loop muted playsinline></video>
+      <br /><strong>Standard</strong>
+    </td>
+    <td>
+      <video src="docs/demos/look-material.mov" width="220" autoplay loop muted playsinline></video>
+      <br /><strong>Material</strong>
+    </td>
+    <td>
+      <video src="docs/demos/look-ios.mov" width="220" autoplay loop muted playsinline></video>
+      <br /><strong>iOS</strong>
+    </td>
+  </tr>
+  <tr align="center">
+    <td>
+      <video src="docs/demos/look-glass.mov" width="220" autoplay loop muted playsinline></video>
+      <br /><strong>Glassmorphism</strong>
+    </td>
+    <td>
+      <video src="docs/demos/look-neumorphism.mov" width="220" autoplay loop muted playsinline></video>
+      <br /><strong>Neumorphism</strong>
+    </td>
+    <td>
+      <video src="docs/demos/look-retro.mov" width="220" autoplay loop muted playsinline></video>
+      <br /><strong>Retro</strong>
+    </td>
+  </tr>
+  <tr align="center">
+    <td colspan="3">
+      <video src="docs/demos/look-neo-brutalism.mov" width="220" autoplay loop muted playsinline></video>
+      <br /><strong>Neo-Brutalism</strong>
     </td>
   </tr>
 </table>
@@ -239,10 +282,11 @@ const XShimmerChild(height: 48, look: XLook.glass);
 
 ### Runnable showcase
 
-Open the example app and tap **Open Look Presets Showcase** to compare every
-look side by side with buttons, cards, fields, dialogs, sheets, and snackbars.
+Open the example app and choose a look from the home screen to compare presets
+on dedicated pages or open the full widget showcase for Standard and Material.
 
-See [example/lib/look_presets_example.dart](example/lib/look_presets_example.dart).
+See [example/lib/look_picker_page.dart](example/lib/look_picker_page.dart) and
+[example/lib/look_themed_example.dart](example/lib/look_themed_example.dart).
 
 ## Widget catalog
 
@@ -702,9 +746,10 @@ await XDialog.alert(
 );
 ```
 
-See [Look presets](#look-presets) for the full reference and
-[example/lib/look_presets_example.dart](example/lib/look_presets_example.dart)
-for a runnable showcase.
+See [Look presets](#look-presets) for the full reference,
+[example/lib/look_picker_page.dart](example/lib/look_picker_page.dart) for the
+look selection home screen, and [example/lib/look_themed_example.dart](example/lib/look_themed_example.dart)
+for dedicated themed pages.
 
 </details>
 
@@ -899,9 +944,9 @@ const Column(
 See [example/lib/example_xwidgets.dart](example/lib/example_xwidgets.dart) for
 the original widget showcase, including paginated `XScrollView` usage.
 
-See [example/lib/look_presets_example.dart](example/lib/look_presets_example.dart)
-for a side-by-side comparison of every `XLook` preset on buttons, cards, text
-fields, dividers, shimmer, dialogs, bottom sheets, and snackbars.
+See [example/lib/look_picker_page.dart](example/lib/look_picker_page.dart) for the
+look selection home screen and [example/lib/look_themed_example.dart](example/lib/look_themed_example.dart)
+for dedicated iOS, Glass, Neumorphism, Retro, and Neo-Brutalism pages.
 
 See [example/lib/other_widgets_example.dart](example/lib/other_widgets_example.dart)
 for an executable page combining `XAsyncView`, `XDebouncedSearchField`,
