@@ -16,38 +16,24 @@ boilerplate.
 
 ---
 
-<table>
-  <tr>
-    <td width="62%" valign="top">
-      <h2 id="table-of-contents">Table of contents</h2>
-      <ul>
-        <li><a href="#ui-showcase">UI showcase</a></li>
-        <li><a href="#why-xwidgets">Why XWidgets?</a></li>
-        <li><a href="#getting-started">Getting started</a></li>
-        <li><a href="#look-presets">Look presets</a></li>
-        <li><a href="#widget-catalog">Widget catalog</a></li>
-        <li><a href="#xasyncview">XAsyncView</a></li>
-        <li><a href="#xdebouncedsearchfield">XDebouncedSearchField</a></li>
-        <li><a href="#xresponsivelayout">XResponsiveLayout</a></li>
-        <li><a href="#xscrollview">XScrollView</a></li>
-        <li><a href="#xcollectionview">XCollectionView</a></li>
-        <li><a href="#xbutton-states">XButton states</a></li>
-        <li><a href="#xdialog-and-xbottomsheet">XDialog and XBottomSheet</a></li>
-        <li><a href="#xscreen">XScreen</a></li>
-        <li><a href="#other-examples">Other examples</a></li>
-        <li><a href="#complete-examples">Complete examples</a></li>
-        <li><a href="#license">License</a></li>
-      </ul>
-    </td>
-    <td width="38%" valign="middle" align="center">
-      <img
-        src="xwidgets.jpeg"
-        alt="XWidgets example"
-        width="320"
-      />
-    </td>
-  </tr>
-</table>
+## Table of contents
+
+- [UI showcase](#ui-showcase)
+- [Why XWidgets?](#why-xwidgets)
+- [Getting started](#getting-started)
+- [Look presets](#look-presets)
+- [Widget catalog](#widget-catalog)
+- [XAsyncView](#xasyncview)
+- [XDebouncedSearchField](#xdebouncedsearchfield)
+- [XResponsiveLayout](#xresponsivelayout)
+- [XScrollView](#xscrollview)
+- [XCollectionView](#xcollectionview)
+- [XButton states](#xbutton-states)
+- [XDialog and XBottomSheet](#xdialog-and-xbottomsheet)
+- [XScreen](#xscreen)
+- [Other examples](#other-examples)
+- [Complete examples](#complete-examples)
+- [License](#license)
 
 ## UI showcase
 
@@ -57,35 +43,35 @@ widget set.
 <table>
   <tr align="center">
     <td>
-      <video src="docs/demos/look-standard.mov" width="220" autoplay loop muted playsinline></video>
+      <img src="docs/demos/look-standard.gif" alt="Standard look" width="220" />
       <br /><strong>Standard</strong>
     </td>
     <td>
-      <video src="docs/demos/look-material.mov" width="220" autoplay loop muted playsinline></video>
+      <img src="docs/demos/look-material.gif" alt="Material look" width="220" />
       <br /><strong>Material</strong>
     </td>
     <td>
-      <video src="docs/demos/look-ios.mov" width="220" autoplay loop muted playsinline></video>
+      <img src="docs/demos/look-ios.gif" alt="iOS look" width="220" />
       <br /><strong>iOS</strong>
     </td>
   </tr>
   <tr align="center">
     <td>
-      <video src="docs/demos/look-glass.mov" width="220" autoplay loop muted playsinline></video>
+      <img src="docs/demos/look-glass.gif" alt="Glassmorphism look" width="220" />
       <br /><strong>Glassmorphism</strong>
     </td>
     <td>
-      <video src="docs/demos/look-neumorphism.mov" width="220" autoplay loop muted playsinline></video>
+      <img src="docs/demos/look-neumorphism.gif" alt="Neumorphism look" width="220" />
       <br /><strong>Neumorphism</strong>
     </td>
     <td>
-      <video src="docs/demos/look-retro.mov" width="220" autoplay loop muted playsinline></video>
+      <img src="docs/demos/look-retro.gif" alt="Retro look" width="220" />
       <br /><strong>Retro</strong>
     </td>
   </tr>
   <tr align="center">
     <td colspan="3">
-      <video src="docs/demos/look-neo-brutalism.mov" width="220" autoplay loop muted playsinline></video>
+      <img src="docs/demos/look-neo-brutalism.gif" alt="Neo-Brutalism look" width="220" />
       <br /><strong>Neo-Brutalism</strong>
     </td>
   </tr>
