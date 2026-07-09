@@ -8,11 +8,15 @@
 .idea/
 .vscode/
 
-example/linux/flutter/generated_plugin_registrant.cc
-example/linux/flutter/generated_plugin_registrant.h
-example/linux/flutter/generated_plugins.cmake
-example/macos/Flutter/GeneratedPluginRegistrant.swift
-example/pubspec.lock
-example/windows/flutter/generated_plugin_registrant.cc
-example/windows/flutter/generated_plugin_registrant.h
-example/windows/flutter/generated_plugins.cmake
+# Native runner scaffolding + generated splash/launcher assets are only
+# needed to run the example app locally, not to browse it on pub.dev.
+# They stay in the GitHub repo; excluding them keeps the published
+# archive close to the actual lib/ size.
+/example/android/
+/example/ios/
+/example/linux/
+/example/macos/
+/example/windows/
+/example/web/
+/example/assets/
+/example/pubspec.lock
