@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:xwidgets_pack/look/presets/x_dialog_look.dart';
+import 'package:xwidgets_pack/look/x_look.dart';
 
 /// Consistent helpers for custom, alert, confirmation, and loading dialogs.
 ///
 /// All methods return the native dialog result and accept common route
 /// controls, keeping navigation behavior explicit.
+///
+/// Pass [look] to opt into a visual preset. Default is [XLook.standard].
 abstract final class XDialog {
   /// Shows arbitrary dialog content.
   static Future<T?> show<T>(
@@ -36,7 +40,9 @@ abstract final class XDialog {
     String actionLabel = 'OK',
     Widget? icon,
     bool barrierDismissible = true,
+    XLook look = XLook.standard,
   }) {
+    final lookPreset = XDialogLook.resolve(look);
     return show<void>(
       context,
       barrierDismissible: barrierDismissible,
@@ -44,6 +50,9 @@ abstract final class XDialog {
         icon: icon,
         title: Text(title),
         content: Text(message),
+        backgroundColor: lookPreset.backgroundColor,
+        elevation: lookPreset.elevation,
+        shape: look == XLook.standard ? null : lookPreset.shape,
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
@@ -64,7 +73,9 @@ abstract final class XDialog {
     Widget? icon,
     bool isDestructive = false,
     bool barrierDismissible = true,
+    XLook look = XLook.standard,
   }) async {
+    final lookPreset = XDialogLook.resolve(look);
     final result = await show<bool>(
       context,
       barrierDismissible: barrierDismissible,
@@ -72,6 +83,9 @@ abstract final class XDialog {
         icon: icon,
         title: Text(title),
         content: Text(message),
+        backgroundColor: lookPreset.backgroundColor,
+        elevation: lookPreset.elevation,
+        shape: look == XLook.standard ? null : lookPreset.shape,
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -104,7 +118,9 @@ abstract final class XDialog {
     String? message,
     Widget? indicator,
     bool useRootNavigator = true,
+    XLook look = XLook.standard,
   }) {
+    final lookPreset = XDialogLook.resolve(look);
     return show<T>(
       context,
       barrierDismissible: false,
@@ -112,6 +128,9 @@ abstract final class XDialog {
       builder: (_) => PopScope(
         canPop: false,
         child: AlertDialog(
+          backgroundColor: lookPreset.backgroundColor,
+          elevation: lookPreset.elevation,
+          shape: look == XLook.standard ? null : lookPreset.shape,
           content: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

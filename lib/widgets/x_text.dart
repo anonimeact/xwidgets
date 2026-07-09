@@ -2,6 +2,8 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:xwidgets_pack/look/presets/x_text_look.dart';
+import 'package:xwidgets_pack/look/x_look.dart';
 
 /// A customizable text widget that supports an optional leading icon,
 /// underline decoration, tap handling, width limitation, and overflow control.
@@ -17,6 +19,7 @@ import 'package:flutter/gestures.dart';
 /// - [onTap]: Tap callback using GestureDetector.
 /// - [maxWidth]: Constrains the text to a maximum width.
 /// - [overflow]: Controls the text overflow behavior (e.g., ellipsis).
+/// - [look]: Optional visual look preset (default [XLook.standard]).
 ///
 /// Usage:
 /// ```dart
@@ -29,6 +32,8 @@ import 'package:flutter/gestures.dart';
 ///   maxWidth: 150,
 ///   overflow: TextOverflow.ellipsis,
 /// )
+///
+/// XText('Hello', look: XLook.ios);
 /// ```
 class XText extends StatelessWidget {
   const XText(
@@ -63,6 +68,7 @@ class XText extends StatelessWidget {
     this.behavior,
     this.excludeFromSemantics = false,
     this.dragStartBehavior = DragStartBehavior.start,
+    this.look = XLook.standard,
   });
 
   final String text;
@@ -95,6 +101,9 @@ class XText extends StatelessWidget {
   final HitTestBehavior? behavior;
   final bool excludeFromSemantics;
   final DragStartBehavior dragStartBehavior;
+
+  /// Visual look preset. Defaults to [XLook.standard] (existing package look).
+  final XLook look;
 
   @override
   Widget build(BuildContext context) {
@@ -130,9 +139,11 @@ class XText extends StatelessWidget {
   }
 
   Widget _buildTextContainer() {
+    final lookPreset = XTextLook.resolve(look);
+    final mergedStyle = style ?? lookPreset.style;
     final textStyle = isUseUnderline == true
-        ? style?.copyWith(decoration: TextDecoration.none)
-        : style;
+        ? mergedStyle?.copyWith(decoration: TextDecoration.none)
+        : mergedStyle;
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: maxWidth ?? double.infinity),
@@ -141,8 +152,11 @@ class XText extends StatelessWidget {
             ? BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
-                    color: style?.color ?? Colors.black,
-                    width: 1.2,
+                    color:
+                        lookPreset.underlineColor ??
+                        mergedStyle?.color ??
+                        Colors.black,
+                    width: lookPreset.underlineWidth,
                   ),
                 ),
               )

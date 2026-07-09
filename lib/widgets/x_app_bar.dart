@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:xwidgets_pack/look/presets/x_app_bar_look.dart';
+import 'package:xwidgets_pack/look/x_look.dart';
 
 /// A highly configurable wrapper around Flutter's built-in [AppBar], providing
 /// extended flexibility for common UI requirements.
@@ -61,6 +63,9 @@ class XAppBar extends StatelessWidget implements PreferredSizeWidget {
   final EdgeInsetsGeometry? actionsPadding;
   final bool animateColor;
 
+  /// Visual look preset. Defaults to [XLook.standard] (existing package look).
+  final XLook look;
+
   const XAppBar({
     super.key,
     this.title,
@@ -99,11 +104,14 @@ class XAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.clipBehavior,
     this.actionsPadding,
     this.animateColor = false,
+    this.look = XLook.standard,
   });
 
   @override
   Widget build(BuildContext context) {
-    final Color bgColor = backgroundColor ?? Colors.lightBlue;
+    final lookPreset = XAppBarLook.resolve(look);
+    final Color bgColor =
+        backgroundColor ?? lookPreset.backgroundColor ?? Colors.lightBlue;
 
     final bool isDarkBackground = bgColor.computeLuminance() < 0.5;
 
@@ -129,15 +137,16 @@ class XAppBar extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: toolbarHeight,
       leadingWidth: leadingWidth,
       backgroundColor: bgColor,
-      foregroundColor: foregroundColor,
+      foregroundColor: foregroundColor ?? lookPreset.foregroundColor,
       flexibleSpace: flexibleSpace,
       bottom: bottom,
-      elevation: elevation,
-      scrolledUnderElevation: scrolledUnderElevation,
+      elevation: elevation ?? lookPreset.elevation,
+      scrolledUnderElevation:
+          scrolledUnderElevation ?? lookPreset.scrolledUnderElevation,
       notificationPredicate: notificationPredicate,
       shadowColor: shadowColor,
-      surfaceTintColor: surfaceTintColor,
-      shape: shape,
+      surfaceTintColor: surfaceTintColor ?? lookPreset.surfaceTintColor,
+      shape: shape ?? lookPreset.shape,
       iconTheme: iconTheme,
       actionsIconTheme: actionsIconTheme,
       primary: primary,

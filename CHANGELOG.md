@@ -1,3 +1,15 @@
+## 1.3.0 - 2026-07-09
+
+* Add optional visual **look presets** via the public `XLook` enum (`standard`, `material`, `ios`, `glass`, `neumorphism`, `retro`, `neoBrutalism`).
+* Add an optional `look:` parameter to visual widgets. Default is `XLook.standard`, preserving the existing package look for backward-compatible upgrades.
+* Support `look:` on `XButton`, `XCard`, `XTextField`, `XAppBar`, `XText`, `XSingleDashedLine`, `XDoubleDashedLine`, and `XShimmerChild`.
+* Support `look:` on overlay helpers: `XDialog.alert`, `XDialog.confirm`, `XDialog.loading`, `XBottomSheet.show`, `XBottomSheet.actions`, and all `XSnackbar` entry points.
+* Add lightweight look resolution under `lib/look/` with shared tokens and per-widget presets.
+* Export `XLook` and shimmer widgets from the public `xwidgets.dart` barrel.
+* Add `example/lib/look_presets_example.dart` as a runnable side-by-side showcase for every look preset.
+* Expand README documentation for look presets, supported widgets, override rules, and example usage.
+* Add automated look preset tests in `test/x_look_test.dart`.
+
 ## 1.2.1 - 2026-06-30
 
 * Replace `file_picker` usage in `XTextField` with `file_selector` to avoid pulling platform-specific desktop-only transitive code into the public package surface.

@@ -8,6 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:image_picker/image_picker.dart';
 
+import 'package:xwidgets_pack/look/presets/x_text_field_look.dart';
+import 'package:xwidgets_pack/look/x_look.dart';
 import 'package:xwidgets_pack/utils/x_textfield_options.dart';
 import 'package:xwidgets_pack/utils/x_textfield_style.dart';
 
@@ -125,7 +127,11 @@ class XTextField extends StatefulWidget {
         EditableText.defaultStylusHandwritingEnabled,
     this.canRequestFocus = true,
     this.hintLocales,
+    this.look = XLook.standard,
   });
+
+  /// Visual look preset. Defaults to [XLook.standard] (existing package look).
+  final XLook look;
 
   /// Identifier used by [EditableText] to group text fields for shared behavior.
   final Object groupId;
@@ -634,7 +640,8 @@ class _XTextFieldState extends State<XTextField> {
     bool? isEnable,
     Widget? suffixIcon,
   }) {
-    final style = widget.style ?? const XTextFieldStyle();
+    final style =
+        widget.style ?? XTextFieldLook.resolve(widget.look).style;
     final enabled = (isEnable ?? widget.isEnable) && (widget.enabled ?? true);
     final decoration = (widget.decoration ?? const InputDecoration()).copyWith(
       contentPadding: widget.contentPadding,
@@ -824,7 +831,8 @@ class _XTextFieldState extends State<XTextField> {
   }
 
   Widget _buildDropdownField() {
-    final style = widget.style ?? const XTextFieldStyle();
+    final style =
+        widget.style ?? XTextFieldLook.resolve(widget.look).style;
     final opt = widget.dropdownOptions ?? const XTextFieldDropdownOptions();
 
     return Padding(

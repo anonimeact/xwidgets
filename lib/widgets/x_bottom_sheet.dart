@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:xwidgets_pack/look/presets/x_bottom_sheet_look.dart';
+import 'package:xwidgets_pack/look/x_look.dart';
 
 /// One selectable action displayed by [XBottomSheet.actions].
 class XBottomSheetAction<T> {
@@ -31,6 +33,8 @@ class XBottomSheetAction<T> {
 }
 
 /// Consistent helpers for custom modal sheets and action sheets.
+///
+/// Pass [look] to opt into a visual preset. Default is [XLook.standard].
 abstract final class XBottomSheet {
   /// Shows arbitrary modal bottom-sheet content.
   static Future<T?> show<T>(
@@ -38,7 +42,7 @@ abstract final class XBottomSheet {
     required WidgetBuilder builder,
     bool isScrollControlled = false,
     bool useSafeArea = true,
-    bool showDragHandle = true,
+    bool? showDragHandle,
     bool isDismissible = true,
     bool enableDrag = true,
     Color? backgroundColor,
@@ -46,17 +50,19 @@ abstract final class XBottomSheet {
     BoxConstraints? constraints,
     bool useRootNavigator = false,
     RouteSettings? routeSettings,
+    XLook look = XLook.standard,
   }) {
+    final lookPreset = XBottomSheetLook.resolve(look);
     return showModalBottomSheet<T>(
       context: context,
       builder: builder,
       isScrollControlled: isScrollControlled,
       useSafeArea: useSafeArea,
-      showDragHandle: showDragHandle,
+      showDragHandle: showDragHandle ?? lookPreset.showDragHandle,
       isDismissible: isDismissible,
       enableDrag: enableDrag,
-      backgroundColor: backgroundColor,
-      shape: shape,
+      backgroundColor: backgroundColor ?? lookPreset.backgroundColor,
+      shape: shape ?? lookPreset.shape,
       constraints: constraints,
       useRootNavigator: useRootNavigator,
       routeSettings: routeSettings,
@@ -71,9 +77,11 @@ abstract final class XBottomSheet {
     String? message,
     String cancelLabel = 'Cancel',
     bool showCancel = true,
+    XLook look = XLook.standard,
   }) {
     return show<T>(
       context,
+      look: look,
       builder: (sheetContext) => Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:xwidgets_pack/look/presets/x_divider_look.dart';
+import 'package:xwidgets_pack/look/x_look.dart';
 
 /// A horizontal double-dashed divider line drawn using a custom painter.
 ///
@@ -29,41 +31,58 @@ import 'package:flutter/material.dart';
 /// ```
 class XDoubleDashedLine extends StatelessWidget {
   /// Length of each dash segment.
-  final double dashWidth;
+  ///
+  /// Defaults to the active [look] preset (`6` for [XLook.standard]).
+  final double? dashWidth;
 
   /// Gap between dash segments.
-  final double dashGap;
+  ///
+  /// Defaults to the active [look] preset (`4` for [XLook.standard]).
+  final double? dashGap;
 
   /// Thickness of the dashed lines.
-  final double strokeWidth;
+  ///
+  /// Defaults to `.8` for [XLook.standard], otherwise the look preset.
+  final double? strokeWidth;
 
   /// Color of the dashed lines.
-  final Color color;
+  ///
+  /// Defaults to `Colors.black54` for [XLook.standard].
+  final Color? color;
 
   /// Vertical spacing between the two dashed lines.
   final double spacing;
 
+  /// Visual look preset. Defaults to [XLook.standard] (existing package look).
+  final XLook look;
+
   /// Creates a horizontal double-dashed divider.
   const XDoubleDashedLine({
     super.key,
-    this.dashWidth = 6,
-    this.dashGap = 4,
-    this.strokeWidth = .8,
-    this.color = Colors.black54,
+    this.dashWidth,
+    this.dashGap,
+    this.strokeWidth,
+    this.color,
     this.spacing = 3,
+    this.look = XLook.standard,
   });
 
   @override
   Widget build(BuildContext context) {
+    final lookPreset = XDividerLook.resolve(look);
+    final effectiveStrokeWidth =
+        strokeWidth ??
+        (look == XLook.standard ? .8 : lookPreset.strokeWidth);
+    final effectiveColor = color ?? lookPreset.color ?? Colors.black54;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: CustomPaint(
-        size: Size(double.infinity, spacing + strokeWidth * 2),
+        size: Size(double.infinity, spacing + effectiveStrokeWidth * 2),
         painter: _XDoubleDashedDividerPainter(
-          dashWidth: dashWidth,
-          dashGap: dashGap,
-          strokeWidth: strokeWidth,
-          color: color,
+          dashWidth: dashWidth ?? lookPreset.dashWidth,
+          dashGap: dashGap ?? lookPreset.dashGap,
+          strokeWidth: effectiveStrokeWidth,
+          color: effectiveColor,
           spacing: spacing,
         ),
       ),

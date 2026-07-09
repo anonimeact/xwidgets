@@ -36,18 +36,24 @@
 /// - `XTextField` — enhanced text field with built-in validator hooks and
 ///   styling options.
 /// - `XText` — lightweight text helper that consolidates common text styles.
+/// - `XLook` — optional visual look presets (`standard`, `material`, `ios`,
+///   `glass`, `neumorphism`, `retro`, `neoBrutalism`). Default is `standard`
+///   (existing package look). Pass `look:` only when opting into a preset.
 ///
 /// Usage
 /// Add the package import and use widgets directly:
 ///
 /// ```dart
-/// import 'package:xwidgets/xwidgets.dart';
+/// import 'package:xwidgets_pack/xwidgets.dart';
 ///
 /// Example: simple button
 /// XButton(
 ///   label: 'Send',
 ///   onPressed: () => print('sent'),
 /// );
+///
+/// // Opt into a look preset:
+/// XButton(label: 'Send', onPressed: () {}, look: XLook.ios);
 /// ```
 ///
 /// Contributing
@@ -60,6 +66,7 @@
 ///
 library;
 
+export 'look/x_look.dart';
 export 'widgets/x_app_bar.dart';
 export 'widgets/x_async_view.dart';
 export 'widgets/x_bottom_sheet.dart';
@@ -78,3 +85,6 @@ export 'widgets/x_scrollview.dart';
 export 'widgets/x_spacer.dart';
 export 'widgets/x_text_field.dart';
 export 'widgets/x_text.dart';
+export 'widgets/shimmer/x_shimmer.dart';
+export 'widgets/shimmer/x_shimmer_child.dart';
+export 'widgets/shimmer/x_shimmer_effect.dart';

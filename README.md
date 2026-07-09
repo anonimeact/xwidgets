@@ -9,7 +9,7 @@ boilerplate.
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![GitHub](https://img.shields.io/badge/source-GitHub-181717?logo=github)](https://github.com/anonimeact/xwidgets)
 
-[Getting started](#getting-started) · [Widget catalog](#widget-catalog) ·
+[Getting started](#getting-started) · [Look presets](#look-presets) · [Widget catalog](#widget-catalog) ·
 [Examples](#complete-examples)
 
 </div>
@@ -23,6 +23,7 @@ boilerplate.
       <ul>
         <li><a href="#why-xwidgets">Why XWidgets?</a></li>
         <li><a href="#getting-started">Getting started</a></li>
+        <li><a href="#look-presets">Look presets</a></li>
         <li><a href="#widget-catalog">Widget catalog</a></li>
         <li><a href="#xasyncview">XAsyncView</a></li>
         <li><a href="#xdebouncedsearchfield">XDebouncedSearchField</a></li>
@@ -58,6 +59,8 @@ from a specific state-management package.
 - Initial loading and paginated lists.
 - Empty, error, retry, refresh, and loading states.
 - Shimmer, snackbar, spacing, and decorative helpers.
+- Optional visual **look presets** (`standard`, `material`, `ios`, `glass`,
+  `neumorphism`, `retro`, `neoBrutalism`) on visual widgets.
 
 ## Getting started
 
@@ -65,7 +68,7 @@ Add the package:
 
 ```yaml
 dependencies:
-  xwidgets_pack: ^1.2.0
+  xwidgets_pack: ^1.3.0
 ```
 
 Install dependencies and import the public library:
@@ -78,6 +81,169 @@ flutter pub get
 import 'package:xwidgets_pack/xwidgets.dart';
 ```
 
+## Look presets
+
+Visual widgets accept an optional `look:` parameter backed by the public
+`XLook` enum. The default is **`XLook.standard`**, which preserves the
+existing package look. Upgrading does not change current UIs unless you opt in.
+
+```dart
+import 'package:xwidgets_pack/xwidgets.dart';
+
+// Unchanged — same as before
+XButton(label: 'Save', onPressed: onSave);
+
+// Opt into a preset
+XButton(label: 'Save', onPressed: onSave, look: XLook.ios);
+XCard(look: XLook.glass, child: content);
+XTextField(hintText: 'Email', look: XLook.material);
+XDialog.alert(context, title: 'Hi', message: 'Hello', look: XLook.retro);
+```
+
+### Available looks
+
+| `XLook` | Description |
+| --- | --- |
+| `standard` | Existing package defaults (backward-compatible) |
+| `material` | Material 3-inspired shapes, tonal surfaces, and colors |
+| `ios` | Large radius, light borders, low elevation |
+| `glass` | Translucent fill with blur (glassmorphism) |
+| `neumorphism` | Soft extruded surfaces with dual shadows |
+| `retro` | Muted vintage palette with firm borders |
+| `neoBrutalism` | Thick borders, hard offset shadows, high contrast |
+
+### Supported widgets
+
+| Widget | `look:` support |
+| --- | --- |
+| `XButton` | Constructor parameter |
+| `XCard` | Constructor parameter |
+| `XTextField` | Constructor parameter |
+| `XAppBar` | Constructor parameter |
+| `XText` | Constructor parameter |
+| `XSingleDashedLine`, `XDoubleDashedLine` | Constructor parameter |
+| `XShimmerChild` | Constructor parameter |
+| `XDialog.alert`, `XDialog.confirm`, `XDialog.loading` | Method parameter |
+| `XBottomSheet.show`, `XBottomSheet.actions` | Method parameter |
+| `XSnackbar.info`, `success`, `error`, `warning`, `custom` | Method parameter |
+
+Layout and behavior widgets such as `XScrollView`, `XAsyncView`,
+`XSpacer`, and `XResponsiveLayout` are intentionally unchanged.
+
+### Override rules
+
+Look presets only fill **default visual values**. Explicit props still win:
+
+```dart
+// look sets the default radius, but radius: 24 overrides it
+XButton(
+  label: 'Save',
+  onPressed: onSave,
+  look: XLook.ios,
+  radius: 24,
+);
+
+// style: overrides the look button colors
+XButton(
+  label: 'Save',
+  onPressed: onSave,
+  look: XLook.retro,
+  style: XButtonStyle(background: Colors.purple),
+);
+```
+
+The same rule applies to `XTextField.style`, `XCard.background`, `XAppBar.backgroundColor`,
+and other explicit styling parameters.
+
+### Dynamic look selection
+
+Because `look` is a normal parameter, it can come from app state or config:
+
+```dart
+final look = isIosPlatform ? XLook.ios : XLook.standard;
+
+XButton(
+  label: 'Continue',
+  onPressed: onContinue,
+  look: look,
+);
+```
+
+### Per-widget examples
+
+**Button and card**
+
+```dart
+XButton(label: 'Primary', onPressed: onTap, look: XLook.material);
+XCard(
+  look: XLook.neumorphism,
+  padding: const EdgeInsets.all(16),
+  child: const Text('Soft card'),
+);
+```
+
+**Text field and app bar**
+
+```dart
+XAppBar(title: 'Settings', look: XLook.ios);
+
+XTextField(
+  look: XLook.material,
+  labelOnLine: 'Email',
+  hintText: 'you@example.com',
+);
+```
+
+**Overlays**
+
+```dart
+XSnackbar.success('Saved', look: XLook.glass);
+
+await XDialog.confirm(
+  context,
+  title: 'Delete item?',
+  message: 'This cannot be undone.',
+  look: XLook.neoBrutalism,
+  isDestructive: true,
+);
+
+await XBottomSheet.actions<String>(
+  context,
+  look: XLook.ios,
+  title: 'Share',
+  actions: const [
+    XBottomSheetAction(label: 'Copy link', value: 'copy'),
+    XBottomSheetAction(label: 'Send', value: 'send'),
+  ],
+);
+```
+
+**Text, dividers, and shimmer**
+
+```dart
+XText('Terms of service', look: XLook.ios, isUseUnderline: true);
+const XSingleDashedLine(look: XLook.retro);
+const XDoubleDashedLine(look: XLook.neoBrutalism);
+const XShimmerChild(height: 48, look: XLook.glass);
+```
+
+### Tips
+
+- **Glass** looks best on colorful backgrounds — place `XCard(look: XLook.glass)`
+  over gradients or images.
+- **Neumorphism** works best on a matching flat background (for example
+  `Color(0xFFE0E5EC)`).
+- **`XLook.standard` and `material` are different** — `standard` keeps the
+  original package defaults; `material` applies a stricter Material 3-inspired
+  preset.
+
+### Runnable showcase
+
+Open the example app and tap **Open Look Presets Showcase** to compare every
+look side by side with buttons, cards, fields, dialogs, sheets, and snackbars.
+
+See [example/lib/look_presets_example.dart](example/lib/look_presets_example.dart).
+
 ## Widget catalog
 
 | Widget | Purpose |
@@ -87,15 +253,15 @@ import 'package:xwidgets_pack/xwidgets.dart';
 | `XResponsiveLayout` | Mobile, tablet, and desktop layout switching |
 | `XScrollView<T>` | Vertical/horizontal lists, refresh, pagination, retry, and item interaction |
 | `XCollectionView<T>` | List or grid using the same paginated data API |
-| `XButton` | Configurable button with idle, loading, success, and error states |
-| `XDialog`, `XBottomSheet` | Typed dialogs, confirmations, loading, and action sheets |
+| `XButton` | Configurable button with idle, loading, success, and error states; optional `look:` |
+| `XDialog`, `XBottomSheet` | Typed dialogs, confirmations, loading, and action sheets; optional `look:` |
 | `XScreen` | Scaffold, safe area, content width, loading, and error overlays |
-| `XTextField` | Normal, file, dropdown, date, and time fields with validation |
-| `XAppBar` | App bar wrapper with common title, leading, and action options |
-| `XText` | Text with icon, underline, and tap support |
-| `XCard` | Consistent card layout and styling |
-| `XSnackbar` | Success, warning, error, and custom snackbar helpers |
-| `XShimmer` | Loading placeholders |
+| `XTextField` | Normal, file, dropdown, date, and time fields with validation; optional `look:` |
+| `XAppBar` | App bar wrapper with common title, leading, and action options; optional `look:` |
+| `XText` | Text with icon, underline, and tap support; optional `look:` |
+| `XCard` | Consistent card layout and styling; optional `look:` |
+| `XSnackbar` | Success, warning, error, and custom snackbar helpers; optional `look:` |
+| `XShimmer` | Loading placeholders; `XShimmerChild` supports optional `look:` |
 | `XSpacer`, `XHeight`, `XWidth` | Layout spacing shortcuts |
 | Dashed lines and strikethrough text | Decorative UI helpers |
 
@@ -404,6 +570,17 @@ Use `child`, `loadingChild`, `successChild`, or `errorChild` when each state
 requires fully custom content. Existing `isLoading` and `isLoadingInside`
 parameters remain supported for backward compatibility.
 
+Combine button states with look presets when needed:
+
+```dart
+XButton(
+  state: saveState,
+  label: 'Save',
+  look: XLook.ios,
+  onPressed: save,
+);
+```
+
 ## XDialog and XBottomSheet
 
 ### Confirmation and alert
@@ -466,6 +643,9 @@ final source = await XBottomSheet.actions<String>(
 For custom content, use `XDialog.show<T>` or `XBottomSheet.show<T>`. Both
 return the typed value passed to `Navigator.pop`.
 
+Pass `look:` on alert, confirm, loading, show, and actions helpers to style
+the chrome. See [Look presets](#look-presets).
+
 ## XScreen
 
 `XScreen` combines common page behavior while preserving native `Scaffold`
@@ -499,6 +679,34 @@ Enabled by default:
 - Centered content constraint through `maxContentWidth`.
 
 ## Other examples
+
+<details>
+<summary><strong>Look presets</strong></summary>
+
+```dart
+// Default — existing package look
+XButton(label: 'Save', onPressed: onSave);
+
+// Preset looks
+XButton(label: 'Save', onPressed: onSave, look: XLook.ios);
+XCard(look: XLook.glass, child: const Text('Frosted card'));
+XText('Headline', look: XLook.neoBrutalism);
+
+XSnackbar.success('Saved', look: XLook.material);
+
+await XDialog.alert(
+  context,
+  title: 'Notice',
+  message: 'Hello from a retro dialog.',
+  look: XLook.retro,
+);
+```
+
+See [Look presets](#look-presets) for the full reference and
+[example/lib/look_presets_example.dart](example/lib/look_presets_example.dart)
+for a runnable showcase.
+
+</details>
 
 <details>
 <summary><strong>XButton</strong></summary>
@@ -691,10 +899,22 @@ const Column(
 See [example/lib/example_xwidgets.dart](example/lib/example_xwidgets.dart) for
 the original widget showcase, including paginated `XScrollView` usage.
 
+See [example/lib/look_presets_example.dart](example/lib/look_presets_example.dart)
+for a side-by-side comparison of every `XLook` preset on buttons, cards, text
+fields, dividers, shimmer, dialogs, bottom sheets, and snackbars.
+
 See [example/lib/other_widgets_example.dart](example/lib/other_widgets_example.dart)
 for an executable page combining `XAsyncView`, `XDebouncedSearchField`,
 `XResponsiveLayout`, `XCollectionView`, stateful `XButton`, `XDialog`,
 `XBottomSheet`, and `XScreen`.
+
+Run the example app from the package root:
+
+```bash
+cd example
+flutter pub get
+flutter run
+```
 
 ## License
 

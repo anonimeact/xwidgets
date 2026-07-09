@@ -1,13 +1,12 @@
 import 'dart:io';
 
+import 'package:example/look_presets_example.dart';
 import 'package:example/other_widgets_example.dart';
 import 'package:flutter/material.dart';
 import 'package:xwidgets_pack/models/x_button_style.dart';
 import 'package:xwidgets_pack/models/x_snackbar_config.dart';
 import 'package:xwidgets_pack/utils/x_form_validators.dart';
 import 'package:xwidgets_pack/utils/x_textfield_options.dart';
-import 'package:xwidgets_pack/widgets/shimmer/x_shimmer.dart';
-import 'package:xwidgets_pack/widgets/shimmer/x_shimmer_child.dart';
 import 'package:xwidgets_pack/xwidgets.dart';
 
 class ExampleXwidgets extends StatefulWidget {
@@ -307,6 +306,18 @@ class _ExampleXwidgetsState extends State<ExampleXwidgets> {
                 ),
               ),
               XSpacer(height: 16),
+              XButton(
+                widthInfinity: true,
+                label: 'Open Look Presets Showcase',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const LookPresetsExample(),
+                    ),
+                  );
+                },
+              ),
+              XSpacer(height: 8),
               XButton(
                 widthInfinity: true,
                 label: 'Open Other Widgets Examples',

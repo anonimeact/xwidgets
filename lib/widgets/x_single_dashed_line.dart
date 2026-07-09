@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:xwidgets_pack/look/presets/x_divider_look.dart';
+import 'package:xwidgets_pack/look/x_look.dart';
 
 /// A horizontal single dashed line divider drawn using a custom painter.
 ///
@@ -28,39 +30,50 @@ import 'package:flutter/material.dart';
 /// - Decorative separators
 class XSingleDashedLine extends StatelessWidget {
   /// Length of each dash segment.
-  final double dashWidth;
+  ///
+  /// Defaults to the active [look] preset (`6` for [XLook.standard]).
+  final double? dashWidth;
 
   /// Gap between dash segments.
-  final double dashGap;
+  ///
+  /// Defaults to the active [look] preset (`4` for [XLook.standard]).
+  final double? dashGap;
 
   /// Thickness of the dashed line.
-  final double strokeWidth;
+  ///
+  /// Defaults to the active [look] preset (`1` for [XLook.standard]).
+  final double? strokeWidth;
 
   /// Color of the dashed line.
   ///
-  /// Defaults to `Colors.black54`.
+  /// Defaults to `Colors.black54` for [XLook.standard].
   final Color? color;
+
+  /// Visual look preset. Defaults to [XLook.standard] (existing package look).
+  final XLook look;
 
   /// Creates a horizontal single dashed divider.
   const XSingleDashedLine({
     super.key,
-    this.dashWidth = 6,
-    this.dashGap = 4,
-    this.strokeWidth = 1,
+    this.dashWidth,
+    this.dashGap,
+    this.strokeWidth,
     this.color,
+    this.look = XLook.standard,
   });
 
   @override
   Widget build(BuildContext context) {
+    final lookPreset = XDividerLook.resolve(look);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: CustomPaint(
         size: const Size(double.infinity, 1),
         painter: _XDashedDividerPainter(
-          dashWidth: dashWidth,
-          dashGap: dashGap,
-          strokeWidth: strokeWidth,
-          color: color ?? Colors.black54,
+          dashWidth: dashWidth ?? lookPreset.dashWidth,
+          dashGap: dashGap ?? lookPreset.dashGap,
+          strokeWidth: strokeWidth ?? lookPreset.strokeWidth,
+          color: color ?? lookPreset.color ?? Colors.black54,
         ),
       ),
     );

@@ -1,4 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:xwidgets_pack/look/presets/x_snackbar_look.dart';
+import 'package:xwidgets_pack/look/x_look.dart';
 import 'package:xwidgets_pack/models/x_snackbar_config.dart';
 
 /// A utility class for displaying styled snackbars at the top or bottom of the
@@ -40,6 +44,7 @@ class XSnackbar {
     XSnackbarPosition position = XSnackbarPosition.bottom,
     XSnackbarConfig config = const XSnackbarConfig(),
     VoidCallback? onAction,
+    XLook look = XLook.standard,
   }) {
     _show(
       message: message,
@@ -48,6 +53,7 @@ class XSnackbar {
       config: config,
       position: position,
       onAction: onAction,
+      look: look,
     );
   }
 
@@ -58,6 +64,7 @@ class XSnackbar {
     XSnackbarPosition position = XSnackbarPosition.bottom,
     XSnackbarConfig config = const XSnackbarConfig(),
     VoidCallback? onAction,
+    XLook look = XLook.standard,
   }) {
     _show(
       message: message,
@@ -66,6 +73,7 @@ class XSnackbar {
       config: config,
       position: position,
       onAction: onAction,
+      look: look,
     );
   }
 
@@ -76,6 +84,7 @@ class XSnackbar {
     XSnackbarPosition position = XSnackbarPosition.bottom,
     XSnackbarConfig config = const XSnackbarConfig(),
     VoidCallback? onAction,
+    XLook look = XLook.standard,
   }) {
     _show(
       message: message,
@@ -84,6 +93,7 @@ class XSnackbar {
       config: config,
       position: position,
       onAction: onAction,
+      look: look,
     );
   }
 
@@ -94,6 +104,7 @@ class XSnackbar {
     XSnackbarPosition position = XSnackbarPosition.bottom,
     XSnackbarConfig config = const XSnackbarConfig(),
     VoidCallback? onAction,
+    XLook look = XLook.standard,
   }) {
     _show(
       message: message,
@@ -102,6 +113,7 @@ class XSnackbar {
       config: config,
       position: position,
       onAction: onAction,
+      look: look,
     );
   }
 
@@ -122,6 +134,7 @@ class XSnackbar {
     XSnackbarPosition position = XSnackbarPosition.bottom,
     XSnackbarConfig config = const XSnackbarConfig(),
     VoidCallback? onAction,
+    XLook look = XLook.standard,
   }) {
     _show(
       message: message,
@@ -130,6 +143,7 @@ class XSnackbar {
       config: config,
       position: position,
       onAction: onAction,
+      look: look,
     );
   }
 
@@ -142,14 +156,27 @@ class XSnackbar {
     XSnackbarPosition position = XSnackbarPosition.bottom,
     XSnackbarConfig config = const XSnackbarConfig(),
     VoidCallback? onAction,
+    XLook look = XLook.standard,
   }) {
     bool snackbarRemoved = false;
     final overlay = navigatorKey.currentState?.overlay;
     if (overlay == null) return; // overlay belum siap
 
-    final color = type.color ?? Colors.blue;
+    final lookPreset = XSnackbarLook.resolve(look);
+    final color = lookPreset.forceColor ?? type.color ?? Colors.blue;
     final isTop = position == XSnackbarPosition.top;
     final isFloating = config.floating == true;
+    final radius = look == XLook.standard ? config.radius : lookPreset.radius;
+    final elevation = look == XLook.standard ? 6.0 : lookPreset.elevation;
+    final shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(radius.toDouble()),
+      side: lookPreset.borderWidth > 0 && lookPreset.borderColor != null
+          ? BorderSide(
+              color: lookPreset.borderColor!,
+              width: lookPreset.borderWidth,
+            )
+          : BorderSide.none,
+    );
 
     late OverlayEntry entry;
     void removeEntry() {
@@ -160,24 +187,11 @@ class XSnackbar {
     }
 
     entry = OverlayEntry(
-      builder: (context) => Positioned(
-        top: isTop ? MediaQuery.of(context).padding.top + 12 : null,
-        bottom: isTop
-            ? null
-            : isFloating
-            ? (config.margin.bottom)
-            : 0,
-        left: isFloating ? (config.margin.left) : 0,
-        right: isFloating ? (config.margin.right) : 0,
-        child: Material(
-          elevation: 6,
+      builder: (context) {
+        Widget material = Material(
+          elevation: elevation,
           color: color,
-          shape: isFloating && !isTop
-              ? RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(config.radius),
-                )
-              : null,
-          borderRadius: isTop ? BorderRadius.circular(config.radius) : null,
+          shape: isFloating || isTop ? shape : null,
           child: Padding(
             padding: const EdgeInsets.all(14),
             child: Row(
@@ -220,8 +234,33 @@ class XSnackbar {
               ],
             ),
           ),
-        ),
-      ),
+        );
+
+        if (lookPreset.blurSigma > 0) {
+          material = ClipRRect(
+            borderRadius: BorderRadius.circular(radius.toDouble()),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: lookPreset.blurSigma,
+                sigmaY: lookPreset.blurSigma,
+              ),
+              child: material,
+            ),
+          );
+        }
+
+        return Positioned(
+          top: isTop ? MediaQuery.of(context).padding.top + 12 : null,
+          bottom: isTop
+              ? null
+              : isFloating
+              ? (config.margin.bottom)
+              : 0,
+          left: isFloating ? (config.margin.left) : 0,
+          right: isFloating ? (config.margin.right) : 0,
+          child: material,
+        );
+      },
     );
 
     overlay.insert(entry);

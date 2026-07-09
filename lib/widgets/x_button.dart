@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:xwidgets_pack/look/presets/x_button_look.dart';
+import 'package:xwidgets_pack/look/x_look.dart';
 import 'package:xwidgets_pack/models/x_button_style.dart';
 
 /// Visual states supported directly by [XButton].
@@ -20,6 +22,9 @@ enum XButtonState { idle, loading, success, error }
 ///   onPressed: () {},
 ///   style: XButtonStyle(background: Colors.blue),
 /// );
+///
+/// // Opt into a look preset (default is [XLook.standard]):
+/// XButton(label: 'Save', onPressed: () {}, look: XLook.ios);
 /// ```
 class XButton extends StatelessWidget {
   const XButton({
@@ -29,7 +34,7 @@ class XButton extends StatelessWidget {
     this.onHover,
     this.onFocusChange,
     this.label,
-    this.radius = 5,
+    this.radius,
     this.style,
     this.elevatedButtonStyle,
     this.focusNode,
@@ -56,6 +61,7 @@ class XButton extends StatelessWidget {
     this.width,
     this.height,
     this.widthInfinity = false,
+    this.look = XLook.standard,
   });
 
   /// Called when the button is tapped.
@@ -74,7 +80,12 @@ class XButton extends StatelessWidget {
   final String? label;
 
   /// Border radius for the button shape.
-  final double radius;
+  ///
+  /// Defaults to the active [look] preset (`5` for [XLook.standard]).
+  final double? radius;
+
+  /// Visual look preset. Defaults to [XLook.standard] (existing package look).
+  final XLook look;
 
   /// Explicit visual state controlled by application state.
   ///
@@ -162,7 +173,9 @@ class XButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final buttonStyle = style ?? XButtonStyle();
+    final lookPreset = XButtonLook.resolve(look);
+    final buttonStyle = style ?? lookPreset.style;
+    final effectiveRadius = radius ?? lookPreset.radius;
     final effectiveState =
         state ?? (isLoading ? XButtonState.loading : XButtonState.idle);
     final buttonTextStyle =
@@ -262,7 +275,7 @@ class XButton extends StatelessWidget {
         effectiveState == XButtonState.error;
     final canInteract = isForceTap == true || (isEnable && isInteractiveState);
     final mergedElevatedStyle = styleButtonRounded(
-      radius: radius,
+      radius: effectiveRadius,
       background: isEnable
           ? buttonStyle.background
           : buttonStyle.disableBackground,
