@@ -1,6 +1,9 @@
 /build/
 /.dart_tool/
 /coverage/
+
+# Demo GIFs for README only — keep in git, exclude from pub.dev tarball.
+/doc/demos/
 *.iml
 .idea/
 .vscode/

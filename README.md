@@ -43,36 +43,36 @@ widget set.
 <table>
   <tr align="center">
     <td>
-      <img src="doc/demos/look-standard.gif" alt="Standard look" width="220" />
+      <img src="https://raw.githubusercontent.com/anonimeact/xwidgets/main/doc/demos/look-standard.gif" alt="Standard look" width="220" />
       <br /><strong>Standard</strong>
     </td>
     <td>
-      <img src="doc/demos/look-material.gif" alt="Material look" width="220" />
+      <img src="https://raw.githubusercontent.com/anonimeact/xwidgets/main/doc/demos/look-material.gif" alt="Material look" width="220" />
       <br /><strong>Material</strong>
     </td>
     <td>
-      <img src="doc/demos/look-ios.gif" alt="iOS look" width="220" />
+      <img src="https://raw.githubusercontent.com/anonimeact/xwidgets/main/doc/demos/look-ios.gif" alt="iOS look" width="220" />
       <br /><strong>iOS</strong>
     </td>
   </tr>
   <tr align="center">
     <td>
-      <img src="doc/demos/look-glass.gif" alt="Glassmorphism look" width="220" />
+      <img src="https://raw.githubusercontent.com/anonimeact/xwidgets/main/doc/demos/look-glass.gif" alt="Glassmorphism look" width="220" />
       <br /><strong>Glassmorphism</strong>
     </td>
     <td>
-      <img src="doc/demos/look-neumorphism.gif" alt="Neumorphism look" width="220" />
+      <img src="https://raw.githubusercontent.com/anonimeact/xwidgets/main/doc/demos/look-neumorphism.gif" alt="Neumorphism look" width="220" />
       <br /><strong>Neumorphism</strong>
     </td>
     <td>
-      <img src="doc/demos/look-retro.gif" alt="Retro look" width="220" />
+      <img src="https://raw.githubusercontent.com/anonimeact/xwidgets/main/doc/demos/look-retro.gif" alt="Retro look" width="220" />
       <br /><strong>Retro</strong>
     </td>
   </tr>
   <tr align="center">
     <td></td>
     <td>
-      <img src="doc/demos/look-neo-brutalism.gif" alt="Neo-Brutalism look" width="220" />
+      <img src="https://raw.githubusercontent.com/anonimeact/xwidgets/main/doc/demos/look-neo-brutalism.gif" alt="Neo-Brutalism look" width="220" />
       <br /><strong>Neo-Brutalism</strong>
     </td>
     <td></td>
