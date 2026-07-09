@@ -640,20 +640,20 @@ class _XTextFieldState extends State<XTextField> {
     bool? isEnable,
     Widget? suffixIcon,
   }) {
-    final style =
-        widget.style ?? XTextFieldLook.resolve(widget.look).style;
+    final style = widget.style ?? XTextFieldLook.resolve(widget.look).style;
     final enabled = (isEnable ?? widget.isEnable) && (widget.enabled ?? true);
-    final sharedDecoration = (widget.decoration ?? const InputDecoration()).copyWith(
-      contentPadding: widget.contentPadding,
-      labelText: widget.labelOnLine,
-      labelStyle: widget.labelStyle,
-      floatingLabelBehavior: widget.floatingLabelBehavior,
-      hintText: widget.hintText,
-      hintStyle: widget.hintStyle,
-      prefixIcon: widget.prefixIcon,
-      suffixIcon: suffixIcon ?? widget.suffixIcon,
-      counterText: widget.isShowCounter ? null : '',
-    );
+    final sharedDecoration = (widget.decoration ?? const InputDecoration())
+        .copyWith(
+          contentPadding: widget.contentPadding,
+          labelText: widget.labelOnLine,
+          labelStyle: widget.labelStyle,
+          floatingLabelBehavior: widget.floatingLabelBehavior,
+          hintText: widget.hintText,
+          hintStyle: widget.hintStyle,
+          prefixIcon: widget.prefixIcon,
+          suffixIcon: suffixIcon ?? widget.suffixIcon,
+          counterText: widget.isShowCounter ? null : '',
+        );
     final decoration = style.usesInsetDecoration
         ? style.insetDecoration(sharedDecoration)
         : sharedDecoration.copyWith(
@@ -665,86 +665,83 @@ class _XTextFieldState extends State<XTextField> {
           );
 
     final field = TextFormField(
-        groupId: widget.groupId,
-        restorationId: widget.restorationId,
-        controller: _controller,
-        focusNode: _effectiveFocusNode,
-        readOnly: isReadOnly ?? !enabled || widget.isReadOnly,
-        enabled: enabled,
-        onTap: onTapAction ?? widget.onTap,
-        onTapAlwaysCalled: widget.onTapAlwaysCalled,
-        onTapOutside: widget.onTapOutside,
-        onTapUpOutside: widget.onTapUpOutside,
-        onEditingComplete: widget.onEditingComplete,
-        onFieldSubmitted: widget.onFieldSubmitted,
-        textAlign: widget.textAlign,
-        textAlignVertical: widget.textAlignVertical,
-        textDirection: widget.textDirection,
-        style: widget.textStyle,
-        strutStyle: widget.strutStyle,
-        autofocus: widget.autofocus,
-        showCursor: widget.showCursor,
-        obscuringCharacter: widget.obscuringCharacter,
-        obscureText: widget.isObscureText,
-        autocorrect: widget.autocorrect,
-        smartDashesType: widget.smartDashesType,
-        smartQuotesType: widget.smartQuotesType,
-        enableSuggestions: widget.enableSuggestions,
-        keyboardType: widget.inputType,
-        keyboardAppearance: widget.keyboardAppearance,
-        textCapitalization: widget.textCapitalization,
-        textInputAction: widget.textInputAction,
-        maxLengthEnforcement: widget.maxLengthEnforcement,
-        minLines: widget.minLines,
-        maxLines: widget.maxLines,
-        expands: widget.expands,
-        maxLength: widget.maxLength,
-        inputFormatters: widget.inputFormatters,
-        ignorePointers: widget.ignorePointers,
-        cursorWidth: widget.cursorWidth,
-        cursorHeight: widget.cursorHeight,
-        cursorRadius: widget.cursorRadius,
-        autovalidateMode: widget.autovalidateMode ?? AutovalidateMode.disabled,
-        cursorColor: widget.cursorColor,
-        cursorErrorColor: widget.cursorErrorColor,
-        scrollPadding: widget.scrollPadding,
-        enableInteractiveSelection: widget.enableInteractiveSelection,
-        selectAllOnFocus: widget.selectAllOnFocus,
-        selectionControls: widget.selectionControls,
-        buildCounter: widget.buildCounter,
-        scrollPhysics: widget.scrollPhysics,
-        autofillHints: widget.autofillHints,
-        scrollController: widget.scrollController,
-        enableIMEPersonalizedLearning: widget.enableIMEPersonalizedLearning,
-        mouseCursor: widget.mouseCursor,
-        contextMenuBuilder: widget.contextMenuBuilder,
-        spellCheckConfiguration: widget.spellCheckConfiguration,
-        magnifierConfiguration: widget.magnifierConfiguration,
-        undoController: widget.undoController,
-        onAppPrivateCommand: widget.onAppPrivateCommand,
-        cursorOpacityAnimates: widget.cursorOpacityAnimates,
-        selectionHeightStyle: widget.selectionHeightStyle,
-        selectionWidthStyle: widget.selectionWidthStyle,
-        dragStartBehavior: widget.dragStartBehavior,
-        contentInsertionConfiguration: widget.contentInsertionConfiguration,
-        statesController: widget.statesController,
-        clipBehavior: widget.clipBehavior,
-        stylusHandwritingEnabled: widget.stylusHandwritingEnabled,
-        canRequestFocus: widget.canRequestFocus,
-        hintLocales: widget.hintLocales,
-        decoration: decoration,
-        validator: _buildValidator,
-        onSaved: widget.onSaved,
-        onChanged: (v) {
-          widget.onChanged?.call(v);
-        },
-      );
+      groupId: widget.groupId,
+      restorationId: widget.restorationId,
+      controller: _controller,
+      focusNode: _effectiveFocusNode,
+      readOnly: isReadOnly ?? !enabled || widget.isReadOnly,
+      enabled: enabled,
+      onTap: onTapAction ?? widget.onTap,
+      onTapAlwaysCalled: widget.onTapAlwaysCalled,
+      onTapOutside: widget.onTapOutside,
+      onTapUpOutside: widget.onTapUpOutside,
+      onEditingComplete: widget.onEditingComplete,
+      onFieldSubmitted: widget.onFieldSubmitted,
+      textAlign: widget.textAlign,
+      textAlignVertical: widget.textAlignVertical,
+      textDirection: widget.textDirection,
+      style: widget.textStyle,
+      strutStyle: widget.strutStyle,
+      autofocus: widget.autofocus,
+      showCursor: widget.showCursor,
+      obscuringCharacter: widget.obscuringCharacter,
+      obscureText: widget.isObscureText,
+      autocorrect: widget.autocorrect,
+      smartDashesType: widget.smartDashesType,
+      smartQuotesType: widget.smartQuotesType,
+      enableSuggestions: widget.enableSuggestions,
+      keyboardType: widget.inputType,
+      keyboardAppearance: widget.keyboardAppearance,
+      textCapitalization: widget.textCapitalization,
+      textInputAction: widget.textInputAction,
+      maxLengthEnforcement: widget.maxLengthEnforcement,
+      minLines: widget.minLines,
+      maxLines: widget.maxLines,
+      expands: widget.expands,
+      maxLength: widget.maxLength,
+      inputFormatters: widget.inputFormatters,
+      ignorePointers: widget.ignorePointers,
+      cursorWidth: widget.cursorWidth,
+      cursorHeight: widget.cursorHeight,
+      cursorRadius: widget.cursorRadius,
+      autovalidateMode: widget.autovalidateMode ?? AutovalidateMode.disabled,
+      cursorColor: widget.cursorColor,
+      cursorErrorColor: widget.cursorErrorColor,
+      scrollPadding: widget.scrollPadding,
+      enableInteractiveSelection: widget.enableInteractiveSelection,
+      selectAllOnFocus: widget.selectAllOnFocus,
+      selectionControls: widget.selectionControls,
+      buildCounter: widget.buildCounter,
+      scrollPhysics: widget.scrollPhysics,
+      autofillHints: widget.autofillHints,
+      scrollController: widget.scrollController,
+      enableIMEPersonalizedLearning: widget.enableIMEPersonalizedLearning,
+      mouseCursor: widget.mouseCursor,
+      contextMenuBuilder: widget.contextMenuBuilder,
+      spellCheckConfiguration: widget.spellCheckConfiguration,
+      magnifierConfiguration: widget.magnifierConfiguration,
+      undoController: widget.undoController,
+      onAppPrivateCommand: widget.onAppPrivateCommand,
+      cursorOpacityAnimates: widget.cursorOpacityAnimates,
+      selectionHeightStyle: widget.selectionHeightStyle,
+      selectionWidthStyle: widget.selectionWidthStyle,
+      dragStartBehavior: widget.dragStartBehavior,
+      contentInsertionConfiguration: widget.contentInsertionConfiguration,
+      statesController: widget.statesController,
+      clipBehavior: widget.clipBehavior,
+      stylusHandwritingEnabled: widget.stylusHandwritingEnabled,
+      canRequestFocus: widget.canRequestFocus,
+      hintLocales: widget.hintLocales,
+      decoration: decoration,
+      validator: _buildValidator,
+      onSaved: widget.onSaved,
+      onChanged: (v) {
+        widget.onChanged?.call(v);
+      },
+    );
 
     if (!style.usesInsetDecoration) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: field,
-      );
+      return Padding(padding: const EdgeInsets.only(bottom: 8.0), child: field);
     }
 
     return Padding(
@@ -852,8 +849,7 @@ class _XTextFieldState extends State<XTextField> {
   }
 
   Widget _buildDropdownField() {
-    final style =
-        widget.style ?? XTextFieldLook.resolve(widget.look).style;
+    final style = widget.style ?? XTextFieldLook.resolve(widget.look).style;
     final opt = widget.dropdownOptions ?? const XTextFieldDropdownOptions();
     final sharedDecoration = InputDecoration(
       hintText: widget.hintText,
@@ -879,9 +875,7 @@ class _XTextFieldState extends State<XTextField> {
       },
       validator: _buildDropdownValidator,
       autoValidateMode: widget.autovalidateMode ?? AutovalidateMode.disabled,
-      decoratorProps: DropDownDecoratorProps(
-        decoration: decoration,
-      ),
+      decoratorProps: DropDownDecoratorProps(decoration: decoration),
       popupProps: PopupProps.menu(
         showSearchBox: opt.showSearchBox,
         fit: FlexFit.loose,

@@ -17,7 +17,11 @@ class XBottomSheetLook {
 
   static XBottomSheetLook resolve(XLook look) {
     final tokens = XLookTokens.surface(look);
-    ShapeBorder shapeFor(double topRadius, {double borderWidth = 0, Color? borderColor}) {
+    ShapeBorder shapeFor(
+      double topRadius, {
+      double borderWidth = 0,
+      Color? borderColor,
+    }) {
       return RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(topRadius)),
         side: borderWidth > 0 && borderColor != null
@@ -38,7 +42,11 @@ class XBottomSheetLook {
       ),
       XLook.glass => XBottomSheetLook(
         backgroundColor: tokens.background,
-        shape: shapeFor(tokens.radius, borderWidth: 1, borderColor: tokens.borderColor),
+        shape: shapeFor(
+          tokens.radius,
+          borderWidth: 1,
+          borderColor: tokens.borderColor,
+        ),
       ),
       XLook.neumorphism => XBottomSheetLook(
         backgroundColor: tokens.background,

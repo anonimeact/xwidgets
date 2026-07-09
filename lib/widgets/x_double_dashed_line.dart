@@ -71,8 +71,7 @@ class XDoubleDashedLine extends StatelessWidget {
   Widget build(BuildContext context) {
     final lookPreset = XDividerLook.resolve(look);
     final effectiveStrokeWidth =
-        strokeWidth ??
-        (look == XLook.standard ? .8 : lookPreset.strokeWidth);
+        strokeWidth ?? (look == XLook.standard ? .8 : lookPreset.strokeWidth);
     final effectiveColor = color ?? lookPreset.color ?? Colors.black54;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),

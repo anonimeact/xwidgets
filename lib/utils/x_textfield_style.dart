@@ -53,10 +53,7 @@ class XTextFieldStyle {
   /// Inset border used by neumorphic text fields.
   Border insetBorder({required bool focused, bool hasError = false}) {
     if (hasError) {
-      return Border.all(
-        color: errorOutlineColor,
-        width: errorOutlineWidth,
-      );
+      return Border.all(color: errorOutlineColor, width: errorOutlineWidth);
     }
 
     final darkColor = focused ? focusedOutlineColor : insetShadowColor!;
@@ -128,10 +125,7 @@ class XTextFieldStyle {
             color: fillColor,
             borderRadius: innerRadius,
           ),
-          child: ClipRRect(
-            borderRadius: innerRadius,
-            child: child,
-          ),
+          child: ClipRRect(borderRadius: innerRadius, child: child),
         ),
       ),
     );
