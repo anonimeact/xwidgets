@@ -70,10 +70,12 @@ widget set.
     </td>
   </tr>
   <tr align="center">
-    <td colspan="3">
+    <td></td>
+    <td>
       <img src="docs/demos/look-neo-brutalism.gif" alt="Neo-Brutalism look" width="220" />
       <br /><strong>Neo-Brutalism</strong>
     </td>
+    <td></td>
   </tr>
 </table>
 
